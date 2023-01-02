@@ -1,0 +1,56 @@
+
+    <!--Topside-->
+    {% load crispy_forms_tags %}
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        Search
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            {{ converts_filter.form| crispy }}
+                            <button class="btn btn-sm btn-info" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        Statistics
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 p-3">
+                                <a class="text-decoration-none text-dark" href="{% url 'dashboard-salvations' %}">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Salvations</h4>
+                                        <h3>{{ converts_filter_count }}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4 p-3">
+                              <a class="text-decoration-none text-dark" href="{% url 'dashboard-followup_due' %}">
+                                  <div class="card my-card shadow text-center p-3">
+                                      <h4>Follow Up Due</h4>
+                                      <h3>{{ FollowUpdue_count }}</h3>
+                                  </div>
+                              </a>
+                          </div>
+                          <div class="col-md-4 p-3">
+                            <a class="text-decoration-none text-dark" href="{% url 'dashboard-church-connect' %}">
+                                <div class="card my-card shadow text-center p-3">
+                                    <h4>Find Church</h4>
+                                    <h3>{{ connect_church_count }}</h3>
+                                </div>
+                            </a>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--End Topside-->

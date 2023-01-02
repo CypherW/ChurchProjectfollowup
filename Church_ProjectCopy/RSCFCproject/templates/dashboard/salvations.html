@@ -1,0 +1,64 @@
+{% extends 'partials/base.html' %}
+{% block title %}Salvations Page{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+{% include 'partials/topnav_search_converts.html' %}
+
+<!--Table-->
+<div class="container">
+    <div class="row my-4">
+        <div class="col-md-4">
+          {% for message in messages %}
+          {% if message %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+
+          </div>
+          {% endif %}
+          {% endfor %}
+
+          <div class="border bg-white p-3">
+            <h4 class="bg-info text-white p-3" >Add New Convert</h4>
+            <hr>
+            <form method="POST">
+              {% csrf_token %}
+              {{ form|crispy }}
+              {{ startFollowup_form|crispy }}
+              <input class="btn btn-success btn-block" type="submit" value="Add New Convert">
+
+            </form>
+          </div>
+        </div>
+        <div class="col-md-8">
+            <table class="table bg-white">
+                <thead class="bg-info">
+                  <tr class="text-white">
+                    <th scope="col">Name</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Activity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for convert in converts_filter.qs %}
+                  <tr>
+                    <td>{{ convert.Name }}</td>
+                    <td>{{ convert.Surname}}</td>
+                    <td>{{ convert.Gender }}</td>
+                    <td>
+                      <a class="btn btn-info btn-sm" href="{% url 'dashboard-salvations-update' convert.id %}">Edit</a>
+                      <a class="btn btn-danger btn-sm" href="{% url 'dashboard-salvations-delete' convert.id %}">Delete</a>
+                      {% endfor %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+   
+</div>
+
+  
+<!--End Table-->
+{% endblock %}
