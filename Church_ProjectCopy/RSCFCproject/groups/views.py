@@ -15,6 +15,7 @@ from .filters import group_meetingsFilter
 from datetime import datetime
 from django.utils import timezone
 from django_htmx.http import trigger_client_event
+from django.core.mail import send_mail
 import json
 
 # Create your views here.
