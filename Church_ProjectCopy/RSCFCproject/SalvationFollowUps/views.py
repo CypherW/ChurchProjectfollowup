@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Converts, Followups, Requests_Feedback, Link_Church, ATTENDCHURCH
+from .models import Converts, Followups, Requests_Feedback, Link_Church, ATTENDCHURCH, Followed_Up_by
 from .forms import ConvertsForm, PrayerRequestForm, FollowupForm, LinkchurchForm
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -107,7 +107,12 @@ def salvations(request):
     if request.method == 'POST':
         form = ConvertsForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            instance.createdBy = User.objects.get(pk=request.user.pk)
+            instance.save()
+            obj = Followups()
+            obj.convert = instance
+            obj.save()
             convert_name = form.cleaned_data.get('Name')
             messages.success(request, f'{convert_name} has been added')
             return redirect('dashboard-salvations')
@@ -162,6 +167,7 @@ def Followup_due(request):
     FollowUpdue_count = followUpdue.count()
     connect_church = Followups.objects.filter(AttendChurch='Away: want to be connected')
     connect_church_count = connect_church.count()
+    followed_up = Followed_Up_by.objects.select_related('convert').all()
 
     
 
@@ -172,7 +178,9 @@ def Followup_due(request):
         'converts_count': converts_count,
         'FollowUpdue_count': FollowUpdue_count,
         'followUpdue': followUpdue,
-        'connect_church_count': connect_church_count
+        'connect_church_count': connect_church_count,
+        'followed_up': followed_up,
+        
     }
     return render(request, 'dashboard/followup_due.html', context)
 
@@ -183,7 +191,12 @@ def followup(request, pk):
     if request.method=='POST':
         form = FollowupForm(request.POST, instance=connect)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            instance.createdBy = User.objects.get(pk=request.user.pk)
+            instance.save()
+            obj = Followed_Up_by.objects.latest('id')
+            obj.createdby = User.objects.get(pk=request.user.pk)
+            obj.save()
             return redirect('dashboard-followup_due')
     else:
         form = FollowupForm(instance=connect)

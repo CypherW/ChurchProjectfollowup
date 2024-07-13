@@ -1,0 +1,67 @@
+{% extends 'partials/base.html' %}
+{% block title %}Visitors Page{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+{% include 'partials/visitor_topnav.html' %}
+
+<!--Table-->
+<div class="container">
+    <div class="row my-4">
+        <div class="col-md-4">
+          {% for message in messages %}
+          {% if message %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+
+          </div>
+          {% endif %}
+          {% endfor %}
+          <div class="border bg-white p-3">
+            <h4 class="bg-info text-white p-3" >Add New Visitor</h4>
+            <hr>
+            <form method="POST">
+              {% csrf_token %}
+              {{ form|crispy }}
+              {{ form_inline.management_form }}
+              {{ form_inline.non_form_errors }}
+              {% for form in form_inline %}
+                  <p>{{ form|crispy }}</p>
+              {% endfor %}
+              <input class="btn btn-success btn-block" type="submit" value="Add New Visitor">
+{{ convert }}
+            </form>
+          </div>
+        </div>
+        <div class="col-md-8">
+            <table class="table bg-white">
+                <thead class="bg-info">
+                  <tr class="text-white">
+                    <th scope="col">Name</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Activity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for visitor in visitors %}
+                  <tr>
+                    <td>{{ visitor.visitor.Name }}</td>
+                    <td>{{ visitor.visitor.Surname}}</td>
+                    <td>{{ visitor.visitor.Gender }}</td>
+                    <td>
+                      <a class="btn btn-info btn-sm" href="{% url 'visitors-update' visitor.visitor.id %}">Edit</a>
+                      <a class="btn btn-danger btn-sm" href="{% url 'visitors-delete' visitor.visitor.id %}">Delete</a>
+                      {% endfor %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+   
+</div>
+
+  
+<!--End Table-->
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'partials/base.html' %}
+{% block title %} Attendance {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<style> 
+
+  .headr1 { 
+      position: sticky; 
+      top: calc(0px + 2rem);
+      z-index:1010;
+  } 
+
+
+
+  .topBar {
+    margin-left: 5px;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    background-color:white;
+  
+  }
+  
+</style> 
+<div class="topBar container d-flex justify-content-md-center">
+  <div class="row row-cols-12 row-cols-md-12">
+  <form method="POST">
+    <a button class ="btn btn-primary bg-info  btn-sm mt-2 mb-2 mr-2" href="{% url 'addPersonForm' %}">Add Person</a>
+      <input type="text" id="searchField" placeholder="Search"
+      hx-get="load_searchByTyping_add_present"
+      hx-target="#attendance_table"
+      hx-trigger="keyup changed delay:100ms"
+      hx-include="#id_session_attended, #id_dateofvisit"
+      name="search"
+      >
+  {% csrf_token %}
+  {{ form }}
+  <a button class ="btn btn-primary bg-info  btn-sm mt-2 mb-2 mr-2" href="{% url 'present_bysession' %}">View Present</a>
+    <input class="btn btn-primary bg-info btn-sm" type="submit" value="Give Feedback">
+  </div>
+  </div> 
+  </form>
+
+
+<div id="tabs" hx-get="/tab1" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>
+<div class="app-table" id="attendance_table">
+  <!--Table-->
+<div class="container d-flex justify-content-center">
+  <table class="table table-hover">
+      <thead class="bg-info">
+        <tr class="text-white">
+          <th class="" scope="col">Name</th>
+          <th class="" scope="col">Age</th>
+          <th class="" scope="col">Gender</th>
+          <th class="" scope="col">Total: {{ attendee_list_count }}</th>
+          <th class="" id="switchCount" scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Please select a session type</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+
+{% endblock %}

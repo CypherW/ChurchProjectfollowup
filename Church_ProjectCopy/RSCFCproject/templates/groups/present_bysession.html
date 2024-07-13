@@ -1,0 +1,76 @@
+{% extends 'partials/base.html' %}
+{% block title %} Attendance {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<style> 
+
+  .headr1 { 
+      position: sticky; 
+      top: calc(0px + 2rem);
+      z-index:1010;
+  } 
+
+
+
+  .topBar {
+    margin-left: ;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    background-color:white;
+  
+  }
+  
+</style>
+
+<div class="topBar container d-flex">
+  <div class="row row-cols-12 row-cols-md-12">
+  <form method="get">
+  <div class="col-md-12">
+    <div class="col-md-12">
+    <a button class ="btn btn-primary bg-info header1  btn-sm" href="{% url 'addPersonForm' %}">Add Person</a>
+      <input type="text" id="searchField" placeholder="Search"
+      hx-get="load_searchByTyping_attending"
+      hx-target="#id_table"
+      hx-trigger="keyup changed delay:100ms"
+      hx-include="#id_date, #id_meeting_attended"
+      name="search"
+      >
+      <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+    </form>
+    <a button class ="btn btn-primary bg-info  btn-sm mt-2 mb-2 mr-2" href="#" onclick="history.back()">Back</a>
+    </div>
+  </div>
+</div>
+</div>
+</form>
+
+<div class="app-table" id="id_table">
+  <!--Table-->
+<div class="container d-flex justify-content-center">
+  <table class="table table-hover">
+      <thead style="position: sticky;top: 0" class="bg-info">
+        <tr class="text-white">
+          <th class="header1" scope="col">Name</th>
+          <th class="header1" scope="col">Age</th>
+          <th class="header1" scope="col">Gender</th>
+          <th class="header1" scope="col">Total: {{ session_count }}</th>
+          <th class="header1" id="switchCount" scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <td>Please select meeting type and date</td>
+      </tbody>
+  </table>
+  </div>
+  </div>
+
+{% endblock %}

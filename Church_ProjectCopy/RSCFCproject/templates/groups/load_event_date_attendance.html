@@ -1,0 +1,31 @@
+{% if groupFeedback  == 'No feedback provided' %}
+<div class="card my-card shadow text-center p-3">
+<ul class="list_group list-group-flush" hx-get="{% url 'load_event_date_attendance' %}"
+                    hx-include="#id_session_attended_options" hx-vals='{"myVariable": "{{ date }}"}'
+                    hx-swap="outerHTML">
+    <li class="list-group-item fw-bold text-start">Present: {{ count}}</li>
+    <li class="list-group-item fw-bold text-start">Absent: {{absent}}</li>
+    <li class="list-group-item text-start"><b>{{groupFeedback }}</b></li>    
+                    </ul>
+                    <button id="feedback_button"
+    class="btn bg-warning">Request Feedback</button>    
+                      </div>
+
+{% else %}
+<div class="card my-card shadow text-center p-3">
+<ul class="list_group list-group-flush">
+    <li class="list-group-item fw-bold text-start">Present: {{ count}}</li>
+    <li class="list-group-item fw-bold text-start">Absent: {{absent}}</li>
+    <li class="list-group-item text-start"><b>Feedback:</b> {{groupFeedback }}</li>
+                    </ul>
+                    <button id="feedback_button"
+                    hx-get="{% url 'display_event_feedback_modal' %}"
+                    hx-target="#modals-here"
+                    hx-trigger="click"
+                    hx-include="#id_session_attended_options" hx-vals='{"eventDate": "{{ date }}"}'
+                    data-bs-toggle="modal"
+                    data-bs-target="#modals-here"
+                    class="btn bg-info">View Feedback</button>    
+                                      </div>
+
+{% endif %}

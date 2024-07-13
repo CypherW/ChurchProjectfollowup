@@ -18,7 +18,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Language</th>
                     <th scope="col">Attend Church</th>
-                    <th scope="col">Created by</th>
+                    <th scope="col">Followed Up By</th>
                     <th scope="col">Date</th>
                   </tr>
                 </thead>
@@ -30,7 +30,7 @@
                     <td>{{ FollowUps.Language }}</td>
                     <td>{{ FollowUps.AttendChurch }}</td>
                     <td>
-                      {{ FollowUps.createdBy.username }}
+                      {{ FollowUps.createdBy }}
                     </td>
                     <td>
                       {{ FollowUps.next_followUpdate | date:"d M Y" }}

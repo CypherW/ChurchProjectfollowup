@@ -1,0 +1,18 @@
+{% if parent_list %}
+<ul class="list-group col-xs-12">
+  {% for person in parent_list %}
+  <li class="list-group-item d-flex justify-contenxt-between align-items-center">
+  {{ person.Name}} {{ person.Surname}}
+  <span class="badge badge-success badge-pill ml-1"
+  style="cursor: pointer;"
+  hx-get="load_searchByTyping_add_parent_selectedParent"
+  hx-vals='{"parentName": "{{ person }}", "child_id": {{ child}}}'
+  hx-target="#results">select</span>
+  </li>
+  {% endfor %}
+  </ul>
+  {% else %}
+  <p>No search results</p>
+  {% endif %}
+  
+</ul>

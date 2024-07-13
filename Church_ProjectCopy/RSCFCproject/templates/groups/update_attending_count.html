@@ -1,0 +1,5 @@
+<th id="id_present_attendance" class="header1" scope="col"
+            hx-get="{% url 'update_attending_count' %}"
+            hx-trigger="mark_attendee_present from:body"
+            hx-include="#id_session_attended, #id_dateofvisit"
+            hx-swap="outerHTML">Total: {{ attendee_list_count }}</th>

@@ -1,0 +1,79 @@
+{% extends 'partials/base.html' %}
+{% block title %} Staff Page {% endblock %}
+
+{% block content %}
+
+<!--Table-->
+<div class="container">
+  <div class="row my-4">
+      <div class="col-md-3">
+        
+      </div>
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-heard bg-info text-white">
+            Profile Page
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-8">
+                <span class="h4"> {{ person.Name }} {{person.Surname}}</span>
+                <hr>
+                <table class="table bg-white table-borderless">
+                  <tbody>
+                    <tr>
+                      <th scope="row">Gender</th>
+                      <td>{{ person.Gender }}</td>
+                      <tr>
+                        <th scope="row">Age</th>
+                      <td>{{ person.age }}</td>
+                      <tr>
+                        <th scope="row">Birthday</th>
+                        <td>{{ person.birthday|date:"d-F-Y" }}</td>
+                       
+                      </tr>
+                    </tr>
+                    <tr>
+                      <th scope="row">Email</th>
+                      <td>{{ person.EmailAddress }}</td>
+                     
+                    </tr>
+                    <tr>
+                      <th scope="row">Phone</th>
+                      <td>{{ person.CellNumber }}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Area</th>
+                      <td>{{ person.area }}</td>
+                    </tr>
+                    {% for parent in parents %}
+                    <tr>
+                      <th scope="row">Parent/Guardian</th>
+                      <td><a href="{% url 'group_person_detail' parent.id %}">{{ parent.Name }} {{ parent.Surname }} </a></td>
+                    {% endfor %}
+                    </tr>
+                  </tr>
+                  {% for child in children %}
+                  <tr>
+                    <th scope="row">Child</th>
+                    <td><a href="{% url 'group_person_detail' child.id %}">{{ child.Name }} {{ child.Surname }} </a></td>
+                  {% endfor %}
+                  </tr>
+                  <tr>
+                    <th scope="row">Groups</th>
+                    <td>{{ groups }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>   
+  </div>  
+</div>
+
+  
+<!--End Table-->
+
+{% endblock %}

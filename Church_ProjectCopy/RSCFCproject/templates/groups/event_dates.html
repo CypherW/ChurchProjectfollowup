@@ -1,0 +1,36 @@
+
+
+        {% for date_group in dates %}
+        <div class="card-body bg-tertiary">
+            
+          <div class="row">
+            {% for date in date_group %}
+              <div class="col-md-4 p-3">
+               
+                  <!--<a class="text-decoration-none text-dark" href="{% url 'present_bysession' %}">-->
+                    <div class="card-header bg-info text-white id={{date}}">
+                       {{date}} 
+                    </div>
+                    <div class="card my-card shadow text-center p-3" hx-get="{% url 'load_event_date_attendance' %}" hx-trigger="load"
+                    hx-include="#id_session_attended_options" hx-vals='{"myVariable": "{{ date }}"}'
+                    hx-swap="outerHTML">
+                    <ul class="list_group list-group-flush">
+                      <li class="list-group-item fw-bold text-start">Present: </li>
+                      <li class="list-group-item fw-bold text-start">Absent</li>
+                      <!--<li class="list-group-item text-start">Some feedback from the night</li>
+                    </ul> -->
+                   <!--<button id="feedback_button"
+    hx-get="{% url 'display_event_feedback_modal' %}"
+    hx-target="#modals-here"
+    hx-trigger="click"
+    hx-include="#id_session_attended_options" hx-vals='{"eventDate": "{{ date }}"}'
+    data-bs-toggle="modal"
+    data-bs-target="#modals-here"
+    class="btn bg-info">View Feedback</button> -->   
+                      </div>
+                  
+              </div>
+              {% endfor %}
+              </div>
+              </div>
+              {% endfor %}

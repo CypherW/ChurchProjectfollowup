@@ -1,0 +1,59 @@
+{% extends 'partials/base.html' %}
+{% block title %} Meetings {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_javascript %}
+{% bootstrap_css %}
+{% load static %}
+
+
+
+<style> 
+  .input-container {
+    display: flex;
+    margin-left: 40px; 
+    margin-right: 40px;  
+  }
+  .input-container input {
+    margin-left: 5px;
+    margin-right: 10px;
+    margin-top: 15px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  
+  }
+  </style>
+
+
+<div class="input-container mt-4">
+  <form method="POST">
+ {% csrf_token %}
+ {{ form.as_p }}
+</form>
+</div>
+
+    <div id="modals-here"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+
+<div class="col-md-11">
+  <div class="card">
+      <div class="card-header bg-info text-white">
+          Feedback
+      </div>
+      <div class="card-body">
+        <div class="row" id="meeting_listings">Select a meeting to view history
+      </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

@@ -42,12 +42,12 @@ LINK_CHURCHES = (
 
 class Converts(models.Model):
     createdBy = models.ForeignKey(User, models.CASCADE, null=True)
-    Name = models.CharField(max_length=20, null=False, blank=True)
-    Surname = models.CharField(max_length=20, null=False, blank=True)
+    Name = models.CharField(max_length=20, null=False, blank=False)
+    Surname = models.CharField(max_length=20, null=False, blank=False)
     Gender = models.CharField(max_length=7, choices=GENDER, null=False, blank=True)
     CellNumber = models.CharField(max_length=10, null=False, blank=True)
     EmailAddress = models.EmailField(max_length=50, null=False, blank=True)
-    whereConverted = models.CharField(max_length=20, choices=CONVERSIONVENUE, null=False, blank=False)
+    whereConverted = models.CharField(max_length=20, choices=CONVERSIONVENUE, null=False, blank=True)
     date = models.DateTimeField(auto_now_add=True)
     area = models.CharField(max_length=20, null=False, blank=True)
     
@@ -57,6 +57,12 @@ class Converts(models.Model):
 
     class Meta:
         ordering = ['-date']
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['Name', 'Surname'], name="%(app_label)s_%(class)s_unique")
+        ]
+
 
     def __str__(self):
         return f'{self.Name} {self.Surname}'
@@ -111,6 +117,13 @@ class Followups(models.Model):
             catTotal.append(num)
         return catTotal
 
+class Followed_Up_by(models.Model):
+    convert = models.ForeignKey(Followups, models.CASCADE, null=True)
+    createdby =  models.ForeignKey(User, models.CASCADE, null=True, blank=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.createdby}, {self.convert}'
 
 class Requests_Feedback(models.Model):
     createdBy = models.ForeignKey(User, models.CASCADE, null=True)

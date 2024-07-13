@@ -15,6 +15,9 @@
     <!--Custom CSS-->
     <link rel="stylesheet" href="{% static '/style.css' %}">
 
+    {% load static %}
+<script src="{% static 'htmx.min.js' %}" defer></script>
+
     <title>{% block title %} {% endblock %}</title>
   </head>
   <body>

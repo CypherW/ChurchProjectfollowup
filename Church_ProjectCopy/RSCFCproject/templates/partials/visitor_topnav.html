@@ -1,0 +1,46 @@
+
+    <!--Topside-->
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        Information
+                    </div>
+                    <div class="card-body">
+                        <marquee behavior="" direction="">
+                            <h3 class="my-4">RSCFC - @ Your Service</h3>
+                        </marquee>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        Statistics
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 p-3">
+                                <a class="text-decoration-none text-dark" href="{% url 'visitors' %}">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Visitors</h4>
+                                        <h3>{{ visitor_count }}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4 p-3">
+                              <a class="text-decoration-none text-dark" href="{% url 'dashboard-followup_due' %}">
+                                  <div class="card my-card shadow text-center p-3">
+                                      <h4>Follow Up Due</h4>
+                                      <h3>{{ FollowUpdue_count }}</h3>
+                                  </div>
+                              </a>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--End Topside-->

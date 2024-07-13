@@ -1,0 +1,59 @@
+{% block content %}
+
+<script>
+  document.body.addEventListener('htmx:configRequest', (event) =>
+  {
+    event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+
+  });
+</script>
+
+<div class="position-fixed bottom-0 p-3 end-0">
+  <a class="btn btn-primary bg-info btn-sm" href="{% url 'prayer_cell_feedback_form' %}">Next</a>
+</div>
+
+<div class="position-fixed bottom-0 p-3 start-0">
+  <a class="btn btn-primary bg-info btn-sm" hx-get="prayer_cell_check_present" hx-include="#id_session_attended, #id_dateofvisit" hx-target="#whole_page">Previous</a>
+</div>
+<div class="app-table" id="id_table">
+    <!--Table-->
+    <br>
+  <div class="container d-flex justify-content-center">
+    <div></div><h4> Present on {{ session_date}}</h4></div>
+    <br>
+    </div>
+    <div class="container d-flex justify-content-center">
+    <table class="table table-hover">
+        <thead style="position: sticky;top: 0" class="bg-info">
+          <tr class="text-white">
+            <th class="header1" scope="col">Name</th>
+            <th class="header1" scope="col">Age</th>
+            <th class="header1" scope="col">Gender</th>
+            <th id="id_present_attendance" class="header1" scope="col"
+            hx-get="{% url 'update_present_count' %}"
+            hx-trigger="remove_attendee from:body"
+            hx-include="#id_date, #id_meeting_attended"
+            hx-swap="outerHTML">Total: {{ count }}</th>
+
+          </tr>
+        </thead>
+        <tbody>
+            {% for attendee in attendee_list %}
+            <tr>
+              <td><a href="{% url 'group_person_detail' attendee.attendee.id %}">{{ attendee.attendee.Name }} {{ attendee.attendee.Surname }} </a></td>
+              <td>{{ attendee.attendee.age }}</td>
+              <td>{{ attendee.attendee.Gender }}</td>
+              <td>
+                <a class="form-check form-switch">
+                <input class="form-check-input switch" type="checkbox" hx-delete="{% url 'remove_attendee' attendee.pk %}" hx-trigger="change" 
+                hx-target="this" hx-swap="outerHTML" hx-on:remove_attendee="this.closest('tr').remove()" name="" id="{{ attendee.id }}" checked>
+                <label class="form-check-label" for="flexSwitchCheckDefault">Absent/Present</label>
+                {% endfor %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+        
+{% endblock %}
