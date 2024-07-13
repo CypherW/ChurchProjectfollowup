@@ -7,9 +7,11 @@
     <li class="list-group-item fw-bold text-start">Absent: {{absent}}</li>
     <li class="list-group-item text-start"><b>{{groupFeedback }}</b></li>    
                     </ul>
-                    <button id="feedback_button"
-    class="btn bg-warning">Request Feedback</button>    
+                    <button id="feedback_button" class="btn bg-warning" hx-get="{% url 'noFeedback_button' %}" hx-include="#id_session_attended_options" 
+                    hx-vals='{"eventDate": "{{ date }}"}', hx-target="#emailSent{{ id_add }}">Request Feedback</button> 
+                    <div id="emailSent{{ id_add }}"></div>   
                       </div>
+                      
 
 {% else %}
 <div class="card my-card shadow text-center p-3">

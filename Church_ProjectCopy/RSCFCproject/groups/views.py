@@ -16,7 +16,7 @@ from datetime import datetime
 from django.utils import timezone
 from django_htmx.http import trigger_client_event
 from django.core.mail import send_mail
-import json
+import json, random
 
 # Create your views here.
 @login_required
@@ -426,6 +426,8 @@ def load_event_date_attendance(request):
     member_list = group_membership.objects.filter(group_id=session_id, active=True)
     members = member_list.count()
     absent = members - count
+    id_add = random.randint(1,100)*random.randint(1,100)
+    id_add = str(id_add)
     try:
         groupFeedback = prayer_cell_feedback.objects.get(meeting_hosted_id=session_id, date_of_meeting=formatted_date)
         groupFeedback = groupFeedback.word_discussed
@@ -436,14 +438,35 @@ def load_event_date_attendance(request):
         'count': count,
         'absent': absent,
         'groupFeedback': groupFeedback,
-        'date': date
+        'date': date,
+        'id_add': id_add,
         }
     
     return render(request, "groups/load_event_date_attendance.html", context)
 
 @login_required
 def noFeedback_button(request):
-    print('test')
+    date = request.GET.get('eventDate')
+    session_id = request.GET.get('session_attended_options')
+    meetingName = session_attended_options.objects.get(id=session_id)
+    leader = User.objects.get(pk=meetingName.group_leader_id)
+    requester = request.user.username
+    #requester = requester.username
+    leaderEmail = leader.email
+    send_mail("FEEDBACK FOR MEETING",
+f"""Dear {leader}, 
+    
+You had a meeting on {date} but did not submit feedback. Please could you submit feedback for this meeting at your earliest convenience?
+     
+Kind Regards,
+
+{requester}
+       
+         """,
+    "shodandevstesting@gmail.com",
+    [leaderEmail],
+    fail_silently=False,
+)
     return render(request, "groups/noFeedback_button.html")
 
 @login_required
