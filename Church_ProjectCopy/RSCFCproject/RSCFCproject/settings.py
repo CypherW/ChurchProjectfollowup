@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'SalvationFollowUps.apps.SalvationfollowupsConfig',
     'user.apps.UserConfig',
     'crispy_forms',
+    'crispy_bootstrap5',
     'django_filters',
     'visitors',
     'bootstrap5',
@@ -117,7 +118,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
