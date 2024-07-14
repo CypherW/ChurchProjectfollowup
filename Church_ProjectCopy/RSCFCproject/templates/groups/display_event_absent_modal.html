@@ -1,0 +1,20 @@
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title text-white">{{ session }}: {{ date }}</h5>
+      </div>
+      <div class="modal-body">
+        <ul>
+        <li>Absentee</li>
+        <li>Prayed About: {{ feedback.prayed_about }}</li>
+        <li>Testimonies: {{ feedback.tesimonies }}</li>
+        <li>Prayer Requests: {{ feedback.prayer_requests }}</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info">View Present</button>
+        <button type="button" class="btn btn-warning">View Absent</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>

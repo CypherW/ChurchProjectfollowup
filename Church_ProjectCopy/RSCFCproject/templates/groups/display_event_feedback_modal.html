@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-dialog-centered">
+<div class="modal-dialog modal-dialog-centered" id="feedback_modal">
     <div class="modal-content">
       <div class="modal-header bg-info">
         <h5 class="modal-title text-white">{{ session }}: {{ date }}</h5>
@@ -12,7 +12,19 @@
         </ul>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info"
+        hx-get="{% url 'display_event_present_modal' %}"
+                    hx-target="#feedback_modal"
+                    hx-trigger="click" hx-vals='{"eventDate": "{{ date }}", "session": "{{ session }}"}'
+                    hx-swap="outerHTML"
+        >View Present</button>
+        <button type="button" class="btn btn-warning"
+        hx-get="{% url 'display_event_absent_modal' %}"
+                    hx-target="#feedback_modal"
+                    hx-trigger="click" hx-vals='{"eventDate": "{{ date }}", "session": "{{ session }}"}'
+                    hx-swap="outerHTML"
+        >View Absent</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

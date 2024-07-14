@@ -1,0 +1,21 @@
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title text-white">{{ session }}: {{ date }}</h5>
+      </div>
+      <div class="modal-body">
+        <h3>Present:</h3>
+        <ul>
+          {% for attendee in attendee_list %}
+        <li><a href="{% url 'group_person_detail' attendee.attendee.id %}">{{ attendee.attendee.Name }} {{ attendee.attendee.Surname }} </a></li>
+        {% endfor %}
+        </ul>
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info">View Present</button>
+        <button type="button" class="btn btn-warning">View Absent</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>

@@ -484,6 +484,41 @@ def display_event_feedback_modal(request):
     return render(request, "groups/display_event_feedback_modal.html", context)
 
 @login_required
+def display_event_absent_modal(request):
+    date = request.GET.get('eventDate')
+    session = request.GET.get('session')
+    session_id = session_attended_options.objects.get(session_attended=session)
+    formatted_date = datetime.strptime(date, "%d %B %Y")
+    attendee_list = session_attendance.objects.filter(dateofvisit=formatted_date, session_attended=session_id)
+    member_list = group_membership.objects.filter(group_id=session_id, active=True)
+    print(member_list)
+    print(attendee_list)
+    count = attendee_list.count()
+    print(count)
+    context = { 
+        'date': date,
+        'session': session,
+
+          }
+    return render(request, "groups/display_event_absent_modal.html", context)
+
+@login_required
+def display_event_present_modal(request):
+    date = request.GET.get('eventDate')
+    session = request.GET.get('session')
+    session_id = session_attended_options.objects.get(session_attended=session)
+    formatted_date = datetime.strptime(date, "%d %B %Y")
+    attendee_list = session_attendance.objects.filter(dateofvisit=formatted_date, session_attended=session_id)
+    attendee_list = attendee_list.order_by('attendee_id__Name')
+    context = { 
+        'date': date,
+        'session': session,
+        'attendee_list': attendee_list,
+
+          }
+    return render(request, "groups/display_event_present_modal.html", context)
+
+@login_required
 def add_toGroupForm(request):
     group_options = session_attended_options.objects.all()
     context = {
