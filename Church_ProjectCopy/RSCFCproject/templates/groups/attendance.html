@@ -30,7 +30,7 @@
 </style> 
 <div class="topBar container d-flex justify-content-md-center">
   <div class="row row-cols-12 row-cols-md-12">
-  <form method="POST">
+  <form method="POST" class="form-inline">
     <a button class ="btn btn-primary bg-info  btn-sm mt-2 mb-2 mr-2" href="{% url 'addPersonForm' %}">Add Person</a>
       <input type="text" id="searchField" placeholder="Search"
       hx-get="load_searchByTyping_add_present"
@@ -41,11 +41,12 @@
       >
   {% csrf_token %}
   {{ form }}
-  <a button class ="btn btn-primary bg-info  btn-sm mt-2 mb-2 mr-2" href="{% url 'present_bysession' %}">View Present</a>
+  <a button class ="btn btn-primary bg-info  btn-sm mt-2 mb-2 mr-2 ml-2" href="{% url 'present_bysession' %}">View Present</a>
     <input class="btn btn-primary bg-info btn-sm" type="submit" value="Give Feedback">
+  </form>
   </div>
   </div> 
-  </form>
+ 
 
 
 <div id="tabs" hx-get="/tab1" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>

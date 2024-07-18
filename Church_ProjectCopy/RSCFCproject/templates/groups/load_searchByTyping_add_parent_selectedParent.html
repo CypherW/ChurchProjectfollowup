@@ -1,11 +1,10 @@
 
-<div id="results">
-<div class="">
-<div class="column ml-5">
-  Selected Parent:
-  <ul>
-    <li>{{ parent }}</li>
-  </ul>
-</div>
-</div>
-</div>
+<div class="container d-flex justify-content-center">
+  <h6>Selected Parent:  {{ parent}} </h6>
+  <input class="btn btn-primary bg-info btn-sm ml-2" type="submit" value="Confirm"
+  style="cursor: pointer;"
+  hx-get="confirmed_exisiting_parent"
+  hx-vals='{"parentName": "{{ parent }}"}'>
+  </div>
+  
+  

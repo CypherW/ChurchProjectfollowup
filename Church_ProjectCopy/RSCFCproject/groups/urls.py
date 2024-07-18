@@ -30,6 +30,7 @@ urlpatterns = [
     path('groups/addPerson_existingParent/load_searchByTyping_add_parent/', views.load_searchByTyping_add_parent, name='load_searchByTyping_add_parent'),
     path('groups/addPerson_existingParent/load_searchByTyping_add_parent_selectedParent', views.load_searchByTyping_add_parent_selectedParent, name='load_searchByTyping_add_parent_selectedParent'),
     path('groups/noFeedback_button', views.noFeedback_button, name='noFeedback_button'),
+    path('groups/addPerson_existingParent/confirmed_exisiting_parent', views.confirmed_exisiting_parent, name='confirmed_exisiting_parent'),
     
     
 ]

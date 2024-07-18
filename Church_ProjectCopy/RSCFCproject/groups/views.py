@@ -215,10 +215,11 @@ def group_addPersonForm(request):
             add_guardian = request.POST.get('add_guardian')
             guardian_entered = request.POST.get('guardian_entered')
             if add_guardian == 'add_guardian':
+                newMember = People.objects.get(pk=obj.id)
                 if guardian_entered == 'no':
                     redirect_url = f'/groups/addPerson_Parent/{newMember.id}'
                     return redirect(redirect_url)
-                if guardian_entered == 'yes':
+                elif guardian_entered == 'yes':
                     redirect_url = f'/groups/addPerson_existingParent/{newMember.id}'
                     return redirect(redirect_url)
             return redirect('group_attendance')
@@ -290,12 +291,18 @@ def load_searchByTyping_add_parent(request):
 @login_required
 def load_searchByTyping_add_parent_selectedParent(request):
     parent = request.GET.get('parentName')
-    child = request.GET.get('child_id')
     context = {
         'parent': parent,
-        'child': child,
     }
     return render(request, 'groups/load_searchByTyping_add_parent_selectedParent.html', context)
+
+@login_required
+def confirmed_exisiting_parent(request):
+    parent = request.GET.get('parentName')
+    print(parent)
+    print('testing')
+    return redirect('group_attendance')
+
 
 @login_required
 def isguardian_entered(request):

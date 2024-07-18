@@ -14,9 +14,11 @@ class Date_Attended_Form(forms.ModelForm):
         fields = ['session_attended', 'dateofvisit']
 
         widgets = {
-            'dateofvisit': forms.DateInput(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_session_attended', 'type': 'date', 'style': 'width: 130px;'}),
-            'session_attended': forms.Select(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_dateofvisit'})     
+            'dateofvisit': forms.DateInput(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_session_attended', 'type': 'date', 'style': 'width: 130px;', 'class': 'form-control inline-form ml-2'}),
+            'session_attended': forms.Select(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_dateofvisit', 'class': 'form-control inline-form ml-2'})    
               }
+        
+        
 
     def __init__(self, group_leader_id, *args, **kwargs):
         super(Date_Attended_Form, self).__init__(*args, **kwargs)

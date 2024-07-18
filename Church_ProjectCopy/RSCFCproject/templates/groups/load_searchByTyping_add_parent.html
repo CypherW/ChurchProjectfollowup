@@ -6,8 +6,8 @@
   <span class="badge badge-success badge-pill ml-1"
   style="cursor: pointer;"
   hx-get="load_searchByTyping_add_parent_selectedParent"
-  hx-vals='{"parentName": "{{ person }}", "child_id": {{ child}}}'
-  hx-target="#results">select</span>
+  hx-vals='{"parentName": "{{ person }}"}'
+  hx-target="#parent_selected">select</span>
   </li>
   {% endfor %}
   </ul>
