@@ -4,7 +4,7 @@ from django.db.models import Count
 from SalvationFollowUps.models import Converts
 from visitors.models import visit_date
 from people.models import People, guardianRelation
-from .models import session_attendance, group_membership, session_attended_options, prayer_cell_feedback
+from .models import session_attendance, group_membership, session_attended_options, prayer_cell_feedback, session_absent
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -148,6 +148,21 @@ def prayer_cell_feedback_form(request):
             session_attended = session_attended_options.objects.get(session_attended=meeting)
             instance.meeting_hosted_id = session_attended.id
             instance.save()
+            attendee_list = session_attendance.objects.filter(dateofvisit=instance.date_of_meeting, session_attended=instance.meeting_hosted_id).values_list('attendee')
+            if instance.meeting_hosted_id == '2':
+                instance.meeting_hosted_id = '1'
+            elif instance.meeting_hosted_id == '4':
+                instance.meeting_hosted_id = '3'
+            member_list = group_membership.objects.filter(group_id=instance.meeting_hosted_id, active=True)
+            attendee_list = list(attendee_list.values_list('attendee_id', flat=True))
+            member_list = member_list.exclude(member_id__in=attendee_list)
+            member_list = member_list.order_by('member_id__Name')
+            for member in member_list:
+                absentee = People.objects.get(id= member.member_id)
+                group_absent_instance = session_absent(absentee=absentee)
+                group_absent_instance.dateofmeeting = instance.date_of_meeting
+                group_absent_instance.session_missed = session_attended
+                group_absent_instance.save()
             return redirect('group_attendance')
     else:
         form = prayer_cell_feedbackForm()
@@ -299,6 +314,7 @@ def load_searchByTyping_add_parent_selectedParent(request):
 @login_required
 def confirmed_exisiting_parent(request):
     parent = request.GET.get('parentName')
+    child = People.objects.get(pk=pk)
     print(parent)
     print('testing')
     return redirect('group_attendance')
@@ -496,15 +512,11 @@ def display_event_absent_modal(request):
     session = request.GET.get('session')
     session_id = session_attended_options.objects.get(session_attended=session)
     formatted_date = datetime.strptime(date, "%d %B %Y")
-    attendee_list = session_attendance.objects.filter(dateofvisit=formatted_date, session_attended=session_id)
-    member_list = group_membership.objects.filter(group_id=session_id, active=True)
-    print(member_list)
-    print(attendee_list)
-    count = attendee_list.count()
-    print(count)
+    absentee_list = session_absent.objects.filter(dateofmeeting=formatted_date, session_missed=session_id)
     context = { 
         'date': date,
         'session': session,
+        'absentee_list': absentee_list,
 
           }
     return render(request, "groups/display_event_absent_modal.html", context)

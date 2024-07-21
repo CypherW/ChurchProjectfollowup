@@ -1,20 +1,29 @@
 <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-info">
-        <h5 class="modal-title text-white">{{ session }}: {{ date }}</h5>
-      </div>
-      <div class="modal-body">
-        <ul>
-        <li>Absentee</li>
-        <li>Prayed About: {{ feedback.prayed_about }}</li>
-        <li>Testimonies: {{ feedback.tesimonies }}</li>
-        <li>Prayer Requests: {{ feedback.prayer_requests }}</li>
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-info">View Present</button>
-        <button type="button" class="btn btn-warning">View Absent</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-      </div>
+  <div class="modal-content">
+    <div class="modal-header bg-info">
+      <h5 class="modal-title text-white">{{ session }}: {{ date }}</h5>
+    </div>
+    <div class="modal-body">
+      <h3>Absent:</h3>
+      <ul>
+        {% for absentee in absentee_list %}
+      <li><a href="{% url 'group_person_detail' absentee.absentee.id %}">{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }} </a></li>
+      {% endfor %}
+      </ul>
+        
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-info"
+      hx-get="{% url 'display_event_present_modal' %}"
+                  hx-target="#feedback_modal"
+                  hx-trigger="click" hx-vals='{"eventDate": "{{ date }}", "session": "{{ session }}"}'
+                  hx-swap="outerHTML">View Feedback</button>
+      <button type="button" class="btn btn-info"
+      hx-get="{% url 'display_event_absent_modal' %}"
+                  hx-target="#feedback_modal"
+                  hx-trigger="click" hx-vals='{"eventDate": "{{ date }}", "session": "{{ session }}"}'
+                  hx-swap="outerHTML">View Feedback</button>
+      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
     </div>
   </div>
+</div>

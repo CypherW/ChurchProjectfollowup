@@ -38,6 +38,21 @@ class session_attendance(models.Model):
             models.UniqueConstraint(fields=['attendee', 'dateofvisit', 'session_attended'], name="%(app_label)s_%(class)s_unique")
         ]
 
+class session_absent(models.Model):
+    absentee = models.ForeignKey(People, models.CASCADE, null=True)
+    dateofmeeting = models.DateField(default=datetime.date.today(), verbose_name = 'Date:')
+    session_missed = models.ForeignKey(session_attended_options, models.CASCADE, null=False, blank=False)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f'{self.session_missed}, {self.absentee}'
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['absentee', 'dateofmeeting', 'session_missed'], name="%(app_label)s_%(class)s_unique")
+        ]
+
 class group_membership(models.Model):
     member = models.ForeignKey(People, models.CASCADE, null=True)
     group = models.ForeignKey(session_attended_options, models.CASCADE, null=True)

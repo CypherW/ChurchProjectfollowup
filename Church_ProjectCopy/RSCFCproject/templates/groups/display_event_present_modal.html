@@ -13,8 +13,16 @@
           
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-info">View Present</button>
-        <button type="button" class="btn btn-warning">View Absent</button>
+        <button type="button" class="btn btn-info"
+        hx-get="{% url 'display_event_present_modal' %}"
+                    hx-target="#feedback_modal"
+                    hx-trigger="click" hx-vals='{"eventDate": "{{ date }}", "session": "{{ session }}"}'
+                    hx-swap="outerHTML">View Feedback</button>
+        <button type="button" class="btn btn-warning"
+        hx-get="{% url 'display_event_absent_modal' %}"
+                    hx-target="#feedback_modal"
+                    hx-trigger="click" hx-vals='{"eventDate": "{{ date }}", "session": "{{ session }}"}'
+                    hx-swap="outerHTML">View Absent</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
