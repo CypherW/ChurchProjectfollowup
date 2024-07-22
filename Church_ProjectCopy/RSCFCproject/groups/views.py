@@ -495,6 +495,7 @@ Kind Regards,
 @login_required
 def display_event_feedback_modal(request):
     date = request.GET.get('eventDate')
+    print(date)
     session_id = request.GET.get('session_attended_options')
     formatted_date = datetime.strptime(date, "%d %B %Y")
     session = session_attended_options.objects.get(id=session_id)
@@ -513,10 +514,12 @@ def display_event_absent_modal(request):
     session_id = session_attended_options.objects.get(session_attended=session)
     formatted_date = datetime.strptime(date, "%d %B %Y")
     absentee_list = session_absent.objects.filter(dateofmeeting=formatted_date, session_missed=session_id)
+    absentee_count = absentee_list.count()
     context = { 
         'date': date,
         'session': session,
         'absentee_list': absentee_list,
+        'absentee_count': absentee_count,
 
           }
     return render(request, "groups/display_event_absent_modal.html", context)
@@ -529,13 +532,29 @@ def display_event_present_modal(request):
     formatted_date = datetime.strptime(date, "%d %B %Y")
     attendee_list = session_attendance.objects.filter(dateofvisit=formatted_date, session_attended=session_id)
     attendee_list = attendee_list.order_by('attendee_id__Name')
+    present_count = attendee_list.count()
     context = { 
         'date': date,
         'session': session,
         'attendee_list': attendee_list,
+        'present_count': present_count,
 
           }
     return render(request, "groups/display_event_present_modal.html", context)
+
+@login_required
+def redirect_display_event_feedback_modal(request):
+    date = request.GET.get('eventDate')
+    session_id = request.GET.get('session_attended_options')
+    formatted_date = datetime.strptime(date, "%d %B %Y")
+    session = session_attended_options.objects.get(session_attended=session_id)
+    feedback = prayer_cell_feedback.objects.get(date_of_meeting=formatted_date, meeting_hosted=session.id)
+    context = { 
+        'session': session,
+        'date': date,
+        'feedback': feedback, 
+          }
+    return render(request, "groups/display_event_feedback_modal.html", context)
 
 @login_required
 def add_toGroupForm(request):

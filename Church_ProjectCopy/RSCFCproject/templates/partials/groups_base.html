@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+    <!--Custom CSS-->
+    <link rel="stylesheet" href="{% static '/style.css' %}">
+
+    {% load static %}
+<script src="{% static 'htmx.min.js' %}" defer></script>
+
+    <title>{% block title %} {% endblock %}</title>
+  </head>
+  <body>
+
+    {% include 'partials/nav_groups.html' %}
+    
+    
+
+    {% block content %}
+
+    {% endblock %}
+
+
+    
+  </body>
+</html>

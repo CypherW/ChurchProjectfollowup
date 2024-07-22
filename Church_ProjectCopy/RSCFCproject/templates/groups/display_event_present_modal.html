@@ -1,10 +1,10 @@
-<div class="modal-dialog modal-dialog-centered">
+<div class="modal-dialog modal-dialog-centered" id="feedback_modal">
     <div class="modal-content">
       <div class="modal-header bg-info">
         <h5 class="modal-title text-white">{{ session }}: {{ date }}</h5>
       </div>
       <div class="modal-body">
-        <h3>Present:</h3>
+        <h3>Present: {{ present_count }}</h3>
         <ul>
           {% for attendee in attendee_list %}
         <li><a href="{% url 'group_person_detail' attendee.attendee.id %}">{{ attendee.attendee.Name }} {{ attendee.attendee.Surname }} </a></li>
@@ -14,10 +14,10 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-info"
-        hx-get="{% url 'display_event_present_modal' %}"
-                    hx-target="#feedback_modal"
-                    hx-trigger="click" hx-vals='{"eventDate": "{{ date }}", "session": "{{ session }}"}'
-                    hx-swap="outerHTML">View Feedback</button>
+      hx-get="{% url 'redirect_display_event_feedback_modal' %}"
+                  hx-target="#feedback_modal"
+                  hx-trigger="click" hx-vals='{"eventDate": "{{ date }}", "session_attended_options": "{{ session }}"}'
+                  hx-swap="outerHTML">View Feedback</button>
         <button type="button" class="btn btn-warning"
         hx-get="{% url 'display_event_absent_modal' %}"
                     hx-target="#feedback_modal"

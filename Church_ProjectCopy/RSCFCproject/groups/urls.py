@@ -23,6 +23,7 @@ urlpatterns = [
     path('groups/display_event_feedback_modal/', views.display_event_feedback_modal, name='display_event_feedback_modal'),
     path('groups/display_event_absent_modal/', views.display_event_absent_modal, name='display_event_absent_modal'),
     path('groups/display_event_present_modal/', views.display_event_present_modal, name='display_event_present_modal'),
+    path('groups/redirect_display_event_feedback_modal/', views.redirect_display_event_feedback_modal, name='redirect_display_event_feedback_modal'),
     path('groups/add_toGroupForm/', views.add_toGroupForm, name='add_toGroupForm'),
     path('groups/isguardian_entered/', views.isguardian_entered, name='isguardian_entered'),
     path('groups/addPerson_Parent/<int:pk>', views.addPerson_Parent, name='addPerson_Parent'),
