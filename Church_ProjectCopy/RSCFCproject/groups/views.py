@@ -300,24 +300,34 @@ def load_searchByTyping_add_parent(request):
             Surname__istartswith=search_term)
     context = {
         'parent_list': parent_list,
+        'child': child,
     }
     return render(request, 'groups/load_searchByTyping_add_parent.html', context)
 
 @login_required
 def load_searchByTyping_add_parent_selectedParent(request):
     parent = request.GET.get('parentName')
+    child = request.GET.get('child_id')
     context = {
         'parent': parent,
+        'child': child,
     }
     return render(request, 'groups/load_searchByTyping_add_parent_selectedParent.html', context)
 
 @login_required
 def confirmed_exisiting_parent(request):
     parent = request.GET.get('parentName')
-    child = People.objects.get(pk=pk)
-    print(parent)
-    print('testing')
-    return redirect('group_attendance')
+    child = request.GET.get('child_id')
+    child = People.objects.get(pk=child)
+    parent = parent.split(' ')
+    parentName = parent[0]
+    parentSurname = parent[1]
+    parent = People.objects.get(Name=parentName, Surname=parentSurname)
+    guardianRelation_instance = guardianRelation(parent=parent)
+    guardianRelation_instance.child = child
+    guardianRelation_instance.save()
+
+    return render(request, 'groups/attendance.html')
 
 
 @login_required

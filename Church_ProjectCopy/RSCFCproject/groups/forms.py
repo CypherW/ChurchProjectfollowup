@@ -14,8 +14,8 @@ class Date_Attended_Form(forms.ModelForm):
         fields = ['session_attended', 'dateofvisit']
 
         widgets = {
-            'dateofvisit': forms.DateInput(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_session_attended', 'type': 'date', 'style': 'width: 130px;', 'class': 'form-control inline-form ml-2'}),
-            'session_attended': forms.Select(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_dateofvisit', 'class': 'form-control inline-form ml-2'})    
+            'dateofvisit': forms.DateInput(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_session_attended', 'type': 'date', 'style': 'width: 130px;', 'class': 'm-2'}),
+            'session_attended': forms.Select(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_dateofvisit', 'class': 'm-2'})    
               }
         
         
@@ -37,9 +37,9 @@ class group_type_select(forms.Form):
     
 class present_select_fieldsForm(forms.Form):
     meeting_attended = forms.ModelChoiceField(queryset=session_attended_options.objects.all(),
-                                              widget=forms.Select(attrs={"hx-get": "load_dates_present_by_session", "hx-target": "#id_date"}))
+                                              widget=forms.Select(attrs={"hx-get": "load_dates_present_by_session", "hx-target": "#id_date", 'class': 'm-2'}))
     date = forms.ModelChoiceField(queryset=session_attendance.objects.none(),
-                                  widget=forms.Select(attrs={"hx-get": "load_category_select_present_table", "hx-include": "#id_date, #id_meeting_attended", "hx-target": "#id_table"}))
+                                  widget=forms.Select(attrs={"hx-get": "load_category_select_present_table", "hx-include": "#id_date, #id_meeting_attended", "hx-target": "#id_table", 'class': 'm-2'}))
     
 
 class prayer_cell_feedbackForm(forms.ModelForm):
