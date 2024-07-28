@@ -56,3 +56,8 @@ class guardianRelation(models.Model):
 
     class Meta:
         verbose_name_plural = 'Guardian'
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['child', 'parent'], name="%(app_label)s_%(class)s_unique")
+        ]

@@ -1,0 +1,39 @@
+{% extends 'partials/groups_base.html' %}
+{% block title %} Attendance {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<div class="row-cols-12 container d-flex justify-content-md-center"> 
+  <div class="column my-3">
+  <h3> Followups for {{ group }} </h3>
+</div>
+</div>
+
+  <!--Table-->
+<div class="container d-flex justify-content-center">
+  <table class="table table-hover">
+      <thead class="bg-info">
+        <tr class="text-white">
+          <th class="" scope="col">Name</th>
+          <th class="" scope="col">Date Missed</th>
+          <th class="" scope="col">Request Feedback</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for absentee in absentees %}
+        <tr>
+          <td>{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</td>
+          <td>{{ absentee.dateofmeeting}}</td>
+          <td> <button class="btn-info btn-sm text-white"> Give Feedback</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  </div>
+
+{% endblock %}

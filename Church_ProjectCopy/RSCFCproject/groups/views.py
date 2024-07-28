@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.db.models import Count
 from SalvationFollowUps.models import Converts
 from visitors.models import visit_date
@@ -316,18 +316,27 @@ def load_searchByTyping_add_parent_selectedParent(request):
 
 @login_required
 def confirmed_exisiting_parent(request):
-    parent = request.GET.get('parentName')
-    child = request.GET.get('child_id')
-    child = People.objects.get(pk=child)
-    parent = parent.split(' ')
-    parentName = parent[0]
-    parentSurname = parent[1]
-    parent = People.objects.get(Name=parentName, Surname=parentSurname)
-    guardianRelation_instance = guardianRelation(parent=parent)
-    guardianRelation_instance.child = child
-    guardianRelation_instance.save()
+    try:
+        if request.method == 'POST':
+            parent = request.POST.get('parentName')
+            child_id = request.POST.get('child_id')
+            child = People.objects.get(pk=child_id)
+            parent = parent.split(' ')
+            parentName = parent[0]
+            parentSurname = parent[1]
+            parent = People.objects.get(Name=parentName, Surname=parentSurname)
+            guardianRelation_instance = guardianRelation(parent=parent)
+            guardianRelation_instance.child = child
+            guardianRelation_instance.save()
+            response = JsonResponse({'location': '/groups/'})
+            response['HX-Redirect'] = '/groups/'
+            return response
+    except Exception as e:
+        return JsonResponse({'error': 'An error occurred'}, status=500)
+    else:
+        print('Request method is not POST')
+        return redirect('group_attendance')
 
-    return render(request, 'groups/attendance.html')
 
 
 @login_required
@@ -573,3 +582,21 @@ def add_toGroupForm(request):
         'group_options': group_options
     }
     return render(request, 'groups/add_toGroupForm.html', context)
+
+@login_required
+def group_absent_followup(request):
+    group_leader = request.user.id
+    group = session_attended_options.objects.filter(group_leader_id=group_leader)
+    if len(group) == 1:
+        group = group[0]
+        print(group.id)
+        absentees = session_absent.objects.filter(session_missed_id=group.id)
+    else:
+        group = "TBD"
+    
+    context = {
+        'group': group,
+        'absentees': absentees,
+    }
+
+    return render(request, 'groups/group_absent_followup.html', context)

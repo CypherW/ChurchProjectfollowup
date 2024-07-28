@@ -1,11 +1,15 @@
 
 <div class="container d-flex justify-content-center">
   <form method="POST">
+    {% csrf_token %}
     <row class="d-flex">
+  <div class="column mt-1">
   <h6>Selected Parent:  {{ parent}} </h6>
-  <input class="btn btn-primary bg-info btn-sm ml-2" type="POST" value="Confirm"
+  </div>
+  <a class="btn btn-danger ml-2 btn-sm" href="{% url 'addPerson_existingParent' child %}">Cancel</a>
+  <input class="btn btn-info ml-2 btn-sm" type="submit" value="Confirm"
   style="cursor: pointer;"
-  hx-get="confirmed_exisiting_parent"
+  hx-post="confirmed_exisiting_parent"
   hx-vals='{"parentName": "{{ parent }}", "child_id": {{ child }}}'>
   </row>
   </form>
