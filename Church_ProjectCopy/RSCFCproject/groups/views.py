@@ -589,7 +589,6 @@ def group_absent_followup(request):
     group = session_attended_options.objects.filter(group_leader_id=group_leader)
     if len(group) == 1:
         group = group[0]
-        print(group.id)
         absentees = session_absent.objects.filter(session_missed_id=group.id)
     else:
         group = "TBD"
@@ -600,3 +599,13 @@ def group_absent_followup(request):
     }
 
     return render(request, 'groups/group_absent_followup.html', context)
+
+@login_required
+def group_absentee_followup(request, pk):
+    absentee = People.objects.get(pk=pk)
+
+    context = {
+        'absentee': absentee
+    }
+
+    return render(request, 'groups/group_absentee_followup.html', context)

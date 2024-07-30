@@ -1,0 +1,29 @@
+{% extends 'partials/base.html' %}
+{% block title %} Feedback Form {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<div class="container">
+  <div class="row mt-5">
+      <div class="col-md-6 offset-md-3">
+          <div class="border bg-white p-3">
+              <h4 class="bg-info text-white p-3">Followup Form:</h4>
+              
+                <div class="container d-flex justify-content-center">
+                  <h5>{{ absentee }}: {{ absentee.CellNumber }}</h6>
+
+                <form method="POST">
+                
+                <input class="btn btn-primary bg-info btn-med md-1" type="submit" value="Submit">
+                </form>
+                </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

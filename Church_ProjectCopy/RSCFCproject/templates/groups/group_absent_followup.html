@@ -28,7 +28,7 @@
         <tr>
           <td>{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</td>
           <td>{{ absentee.dateofmeeting}}</td>
-          <td> <button class="btn-info btn-sm text-white"> Give Feedback</button></td>
+          <td> <a button class="btn btn-primary bg-info  btn-sm m-2" href="{% url 'group_absentee_followup' absentee.absentee.id %}"> Give Feedback</a></td>
         </tr>
         {% endfor %}
       </tbody>

@@ -33,6 +33,7 @@ urlpatterns = [
     path('groups/noFeedback_button', views.noFeedback_button, name='noFeedback_button'),
     path('groups/addPerson_existingParent/confirmed_exisiting_parent', views.confirmed_exisiting_parent, name='confirmed_exisiting_parent'),
     path('groups/group_absent_followup', views.group_absent_followup, name='group_absent_followup'),
+    path('groups/group_absentee_followup/<int:pk>', views.group_absentee_followup, name='group_absentee_followup'),
     
     
 ]

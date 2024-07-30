@@ -43,6 +43,8 @@ class session_absent(models.Model):
     dateofmeeting = models.DateField(default=datetime.date.today(), verbose_name = 'Date:')
     session_missed = models.ForeignKey(session_attended_options, models.CASCADE, null=False, blank=False)
     creation_date = models.DateTimeField(auto_now_add=True)
+    follow_up_date = models.DateField(default=datetime.date.today(), verbose_name = 'Date:')
+    follow_up_Feedback = models.TextField(verbose_name='Feedback:', null=True, blank=True)
 
 
     def __str__(self):
