@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from .forms import Person_Form, Date_Attended_Form, group_type_select, present_select_fieldsForm, prayer_cell_feedbackForm
+from .forms import Person_Form, Date_Attended_Form, group_type_select, present_select_fieldsForm, prayer_cell_feedbackForm, absentee_followup_form
 from django.template import RequestContext
 from .filters import group_meetingsFilter
 from datetime import datetime
@@ -514,7 +514,6 @@ Kind Regards,
 @login_required
 def display_event_feedback_modal(request):
     date = request.GET.get('eventDate')
-    print(date)
     session_id = request.GET.get('session_attended_options')
     formatted_date = datetime.strptime(date, "%d %B %Y")
     session = session_attended_options.objects.get(id=session_id)
@@ -534,6 +533,7 @@ def display_event_absent_modal(request):
     formatted_date = datetime.strptime(date, "%d %B %Y")
     absentee_list = session_absent.objects.filter(dateofmeeting=formatted_date, session_missed=session_id)
     absentee_count = absentee_list.count()
+    absentee_list = absentee_list.order_by('absentee_id__Name')
     context = { 
         'date': date,
         'session': session,
@@ -589,7 +589,7 @@ def group_absent_followup(request):
     group = session_attended_options.objects.filter(group_leader_id=group_leader)
     if len(group) == 1:
         group = group[0]
-        absentees = session_absent.objects.filter(session_missed_id=group.id)
+        absentees = session_absent.objects.filter(session_missed_id=group.id, follow_up_Feedback=None)
     else:
         group = "TBD"
     
@@ -602,10 +602,18 @@ def group_absent_followup(request):
 
 @login_required
 def group_absentee_followup(request, pk):
-    absentee = People.objects.get(pk=pk)
+    absentee = session_absent.objects.get(pk=pk)
+    print(absentee.follow_up_Feedback)
+    if request.method=='POST':
+        form = absentee_followup_form(request.POST, instance=absentee)
+        form.save()
+        return redirect('group_absent_followup')
+    else:
+        form = absentee_followup_form(instance=absentee)
 
     context = {
-        'absentee': absentee
+        'absentee': absentee,
+        'form': form,
     }
 
     return render(request, 'groups/group_absentee_followup.html', context)

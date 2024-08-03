@@ -1,6 +1,7 @@
 from django import forms
 from people.models import People
-from .models import session_attendance, session_attended_options, prayer_cell_feedback
+from .models import session_attendance, session_attended_options, prayer_cell_feedback, session_absent
+
 
 class Person_Form(forms.ModelForm):
     class Meta:
@@ -65,3 +66,17 @@ class prayer_cell_feedbackForm(forms.ModelForm):
      class Meta:
         model = prayer_cell_feedback
         fields = ['word_discussed', 'prayed_about', 'testimonies', 'prayer_requests' ]
+
+class absentee_followup_form(forms.ModelForm):
+
+    follow_up_Feedback = forms.CharField(required=True,
+         widget=forms.Textarea(attrs={'class': 'small-textarea', 'rows': 4, 'cols': 30}),
+        label='Feedback:'
+     )
+    class Meta:
+        model = session_absent
+        fields = ['follow_up_date', 'follow_up_Feedback']
+
+        widgets = {
+            'follow_up_date': forms.DateInput(attrs={'type': 'date', 'style': 'width: 130px;', 'class': 'm-2'}) 
+              }

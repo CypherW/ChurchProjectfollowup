@@ -1,4 +1,4 @@
-{% extends 'partials/base.html' %}
+{% extends 'partials/groups_base.html' %}
 {% block title %} Feedback Form {% endblock %}
 {% load crispy_forms_tags %}
 {% block content %}
@@ -7,23 +7,26 @@
 {% bootstrap_javascript %}
 {% load static %}
 
-<div class="container">
-  <div class="row mt-5">
-      <div class="col-md-6 offset-md-3">
-          <div class="border bg-white p-3">
-              <h4 class="bg-info text-white p-3">Followup Form:</h4>
-              
-                <div class="container d-flex justify-content-center">
-                  <h5>{{ absentee }}: {{ absentee.CellNumber }}</h6>
-
-                <form method="POST">
-                
-                <input class="btn btn-primary bg-info btn-med md-1" type="submit" value="Submit">
-                </form>
-                </div>
-          </div>
-      </div>
+<div class="col-md-6 offset-md-3 p-3">
+  <div class="card-header bg-info text-white id={{date}}">
+    <h4> Followup Form: </h4>
   </div>
+  <div class="card shadow text-center p-3">
+  <div class="container d-flex justify-content-center">
+    <h5>{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}: {{ absentee.absentee.CellNumber }}</h5>
+  </div>
+  <div class="container d-flex justify-content-center">
+  <form method="POST">
+    {% csrf_token %}
+    {{ form }}
+
+  <div class="mt-2" id="buttons">
+  <a class="btn btn-danger btn-sm" href="{% url 'group_absent_followup' %}">Cancel</a>
+  <input class="btn btn-primary bg-info btn-sm" type="submit" value="Submit">
+  </div>
+  </form>
+  </div>
+</div>
 </div>
 
 {% endblock %}
