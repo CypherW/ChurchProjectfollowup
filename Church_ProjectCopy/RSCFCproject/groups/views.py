@@ -544,6 +544,29 @@ def display_event_absent_modal(request):
     return render(request, "groups/display_event_absent_modal.html", context)
 
 @login_required
+def display_absentee_feedback_modal(request):
+    absentee = request.GET.get('absent_instance')
+    absentee = session_absent.objects.get(id=absentee)
+    followup_date = absentee.follow_up_date
+    date = request.GET.get('eventDate')
+    session = request.GET.get('session')
+    session_id = session_attended_options.objects.get(session_attended=session)
+    formatted_date = datetime.strptime(date, "%d %B %Y")
+    absentee_list = session_absent.objects.filter(dateofmeeting=formatted_date, session_missed=session_id)
+    absentee_count = absentee_list.count()
+    absentee_list = absentee_list.order_by('absentee_id__Name')
+    context = { 
+        'date': date,
+        'session': session,
+        'absentee_list': absentee_list,
+        'absentee_count': absentee_count,
+        'absentee': absentee,
+        'followup_date': followup_date,
+
+          }
+    return render(request, "groups/display_absentee_feedback_modal.html", context)
+
+@login_required
 def display_event_present_modal(request):
     date = request.GET.get('eventDate')
     session = request.GET.get('session')

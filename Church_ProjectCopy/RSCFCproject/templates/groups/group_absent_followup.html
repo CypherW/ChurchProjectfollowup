@@ -27,7 +27,7 @@
         {% for absentee in absentees %}
         <tr>
           <td><a href="{% url 'group_person_detail' absentee.absentee.id %}">{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</a></td>
-          <td>{{ absentee.dateofmeeting}}</td>
+          <td>{{ absentee.dateofmeeting|date:"d-F-Y"}}</td>
           <td> <a button class="btn btn-primary bg-info btn-sm m-2" href="{% url 'group_absentee_followup' absentee.id %}"> Give Feedback</a></td>
         </tr>
         {% endfor %}

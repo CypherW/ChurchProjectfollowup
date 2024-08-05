@@ -1,8 +1,6 @@
 {% if groupFeedback  == 'No feedback provided' %}
 <div class="card my-card shadow text-center p-3">
-<ul class="list_group list-group-flush" hx-get="{% url 'load_event_date_attendance' %}"
-                    hx-include="#id_session_attended_options" hx-vals='{"myVariable": "{{ date }}"}'
-                    hx-swap="outerHTML">
+<ul class="list_group list-group-flush">
     <li class="list-group-item fw-bold text-start">Present: {{ count}}</li>
     <li class="list-group-item fw-bold text-start">Absent: {{absent}}</li>
     <li class="list-group-item text-start"><b>{{groupFeedback }}</b></li>    
