@@ -7,9 +7,52 @@
 {% bootstrap_javascript %}
 {% load static %}
 
-<div class="row-cols-12 container d-flex justify-content-md-center"> 
-  <div class="column my-3">
+{% if absentees == '0' %}
+<div class="row-cols-12 container d-flex justify-content-md-center m-2">
+  <div class="column m-2">
+
+    <div class="row-cols-12 container d-flex justify-content-md-center">
+      <div class="column m-2">
+        <form method="POST">
+          {% csrf_token %}
+          {{ form.as_p }}
+         </form>
+    </div>
+    <div class="column m-2">
+      <a button class="btn btn-primary bg-info  btn-sm ml-3" href="{% url 'group_absent_view_feedback' %}">Previous Feedback</a>
+    </div>
+    </div>
+    </div>
+    </div>
+
+  <!--Table-->
+  <div class="container d-flex justify-content-center">
+    <table class="table table-hover">
+        <thead class="bg-info">
+          <tr class="text-white">
+            <th class="" scope="col">Name</th>
+            <th class="" scope="col">Date Missed</th>
+            <th class="" scope="col">Request Feedback
+              <span class="badge rounded-pill bg-danger ml-6">{{ absentee_count }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><h4>Select group</h4></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+
+{% else %}
+
+<div class="row-cols-12 container d-flex justify-content-md-center m-3">
+  <div class="column m-2">
   <h3> Followups for {{ group }} </h3>
+</div>
+<div class="column m-2">
+  <a button class="btn btn-primary bg-info  btn-sm ml-3" href="{% url 'group_absent_view_feedback' %}">Previous Feedback</a>
 </div>
 </div>
 
@@ -19,21 +62,24 @@
       <thead class="bg-info">
         <tr class="text-white">
           <th class="" scope="col">Name</th>
-          <th class="" scope="col">Date Missed</th>
-          <th class="" scope="col">Request Feedback</th>
+          <th class="text-nowrap" scope="col">Date Missed</th>
+          <th class="text-nowrap" scope="col">Follow Up
+            <span class="badge rounded-pill bg-danger ml-6">{{ absentee_count }}</span>
+          </th>
         </tr>
       </thead>
       <tbody>
         {% for absentee in absentees %}
         <tr>
-          <td><a href="{% url 'group_person_detail' absentee.absentee.id %}">{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</a></td>
-          <td>{{ absentee.dateofmeeting|date:"d-F-Y"}}</td>
-          <td> <a button class="btn btn-primary bg-info btn-sm m-2" href="{% url 'group_absentee_followup' absentee.id %}"> Give Feedback</a></td>
+          <td class=""><a href="{% url 'group_person_detail' absentee.absentee.id %}">{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</a></td>
+          <td class="text-nowrap">{{ absentee.dateofmeeting|date:"d-F-Y"}}</td>
+          <td> <a button class="btn btn-primary bg-info btn-sm m-2" href="{% url 'group_absentee_followup' absentee.id %}">Follow Up</a></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-  </div>
+
+{% endif %}
 
 {% endblock %}

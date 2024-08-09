@@ -80,3 +80,25 @@ class absentee_followup_form(forms.ModelForm):
         widgets = {
             'follow_up_date': forms.DateInput(attrs={'type': 'date', 'style': 'width: 130px;', 'class': 'm-2'}) 
               }
+        
+class multiple_Group_absentee_feedback_form(forms.ModelForm):
+    class Meta:
+        model = session_attendance
+
+        fields = ['session_attended']
+
+        labels = {
+            'session_attended': 'Select Group'
+        }
+ 
+
+        widgets = {
+            'session_attended': forms.Select(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_dateofvisit'})    
+              }
+        
+        
+
+    def __init__(self, group_leader_id, *args, **kwargs):
+        super(multiple_Group_absentee_feedback_form, self).__init__(*args, **kwargs)
+        # Filter the queryset for the 'session_attended' field based on the group leader ID
+        self.fields['session_attended'].queryset = session_attended_options.objects.filter(group_leader_id=group_leader_id)

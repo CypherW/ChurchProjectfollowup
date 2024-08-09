@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from .forms import Person_Form, Date_Attended_Form, group_type_select, present_select_fieldsForm, prayer_cell_feedbackForm, absentee_followup_form
+from .forms import Person_Form, Date_Attended_Form, group_type_select, present_select_fieldsForm, prayer_cell_feedbackForm, absentee_followup_form, multiple_Group_absentee_feedback_form
 from django.template import RequestContext
 from .filters import group_meetingsFilter
 from datetime import datetime
@@ -613,12 +613,19 @@ def group_absent_followup(request):
     if len(group) == 1:
         group = group[0]
         absentees = session_absent.objects.filter(session_missed_id=group.id, follow_up_Feedback=None)
+        absentee_count = absentees.count()
+        form = '0'
     else:
-        group = "TBD"
+        absentees = '0'
+        absentee_count = '0'
+        group_leader_id = request.user.id
+        form = multiple_Group_absentee_feedback_form(group_leader_id)
     
     context = {
         'group': group,
         'absentees': absentees,
+        'absentee_count': absentee_count,
+        'form': form,
     }
 
     return render(request, 'groups/group_absent_followup.html', context)
@@ -626,7 +633,6 @@ def group_absent_followup(request):
 @login_required
 def group_absentee_followup(request, pk):
     absentee = session_absent.objects.get(pk=pk)
-    print(absentee.follow_up_Feedback)
     if request.method=='POST':
         form = absentee_followup_form(request.POST, instance=absentee)
         form.save()
@@ -640,3 +646,28 @@ def group_absentee_followup(request, pk):
     }
 
     return render(request, 'groups/group_absentee_followup.html', context)
+
+@login_required
+def group_absent_view_feedback(request):
+    group_leader = request.user.id
+    group = session_attended_options.objects.filter(group_leader_id=group_leader)
+    if len(group) == 1:
+        group = group[0]
+        absentees = session_absent.objects.filter(session_missed_id=group.id, follow_up_Feedback__isnull=False).order_by('-dateofmeeting')
+    context = {
+        'group': group,
+        'absentees': absentees,
+    }
+
+    return render(request, 'groups/group_absent_view_feedback.html', context)
+
+@login_required
+def group_absentee_view_feedback(request, pk):
+    absentee = session_absent.objects.get(pk=pk)
+    
+    context = {
+        'absentee': absentee,
+    }
+
+    return render(request, 'groups/group_absentee_view_feedback.html', context)
+

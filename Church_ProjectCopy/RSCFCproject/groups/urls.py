@@ -35,6 +35,9 @@ urlpatterns = [
     path('groups/addPerson_existingParent/confirmed_exisiting_parent', views.confirmed_exisiting_parent, name='confirmed_exisiting_parent'),
     path('groups/group_absent_followup', views.group_absent_followup, name='group_absent_followup'),
     path('groups/group_absentee_followup/<int:pk>', views.group_absentee_followup, name='group_absentee_followup'),
+    path('groups/group_absent_view_feedback', views.group_absent_view_feedback, name='group_absent_view_feedback'),
+    path('groups/group_absentee_view_feedback/<int:pk>', views.group_absentee_view_feedback, name='group_absentee_view_feedback'),
+    
     
     
 ]
