@@ -1,9 +1,12 @@
-{% extends 'partials/base.html' %}
+{% extends 'partials/groups_base.html' %}
 {% block title %} Add Person {% endblock %}
 {% load crispy_forms_tags %}
-{% include 'partials/topnav.html' %}
-
 {% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-6 offset-md-3">

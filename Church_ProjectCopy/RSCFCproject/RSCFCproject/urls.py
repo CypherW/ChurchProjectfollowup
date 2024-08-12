@@ -25,7 +25,7 @@ urlpatterns = [
     path('', include('SalvationFollowUps.urls')),
     path('', include('visitors.urls')),
     path('', include('groups.urls')),
-    path('register/',  user_view.register, name='user-register'),
+  #  path('register/',  user_view.register, name='user-register'),
     path('profile/',  user_view.profile, name='user-profile'),
     path('profile/update',  user_view.profile_update, name='user-profile-update'),
     path('', auth_views.LoginView.as_view(template_name='user/login.html'), name='user-login'),

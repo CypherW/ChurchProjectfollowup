@@ -13,7 +13,7 @@ session_attended = (
 )
 
 class session_attended_options(models.Model):
-    session_attended = models.CharField(max_length=30, choices=session_attended, null=False, blank=False)
+    session_attended = models.CharField(max_length=30, null=False, blank=False)
     group_leader =  models.ForeignKey(User, models.CASCADE, null=False)
     creation_date = models.DateTimeField(auto_now_add=True)
 

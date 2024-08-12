@@ -1,7 +1,11 @@
-{% extends 'partials/base.html' %}
-{% block title %} Staff Page {% endblock %}
-
+{% extends 'partials/groups_base.html' %}
+{% block title %} {{ person.Name }} {{person.Surname}} {% endblock %}
+{% load crispy_forms_tags %}
 {% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
 
 <!--Table-->
 <div class="container">
@@ -11,7 +15,7 @@
       </div>
       <div class="col-md-8">
         <div class="card">
-          <div class="card-heard bg-info text-white">
+          <div class="card-head bg-info text-white">
             Profile Page
           </div>
           <div class="card-body">

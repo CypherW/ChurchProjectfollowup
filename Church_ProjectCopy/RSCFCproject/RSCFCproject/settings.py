@@ -156,7 +156,7 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'dashboard-index'
+LOGIN_REDIRECT_URL = '/groups'
 
 LOGIN_URL = 'user-login'
 
