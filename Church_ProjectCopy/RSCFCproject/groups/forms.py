@@ -93,7 +93,7 @@ class multiple_Group_absentee_feedback_form(forms.ModelForm):
  
 
         widgets = {
-            'session_attended': forms.Select(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_dateofvisit'})    
+            'session_attended': forms.Select(attrs={'hx-get': 'multi_group_absent_followup_selected', 'hx-target': '#absent_table', 'hx-include': '#id_session_attended'})    
               }
         
         

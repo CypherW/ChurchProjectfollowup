@@ -631,6 +631,24 @@ def group_absent_followup(request):
     return render(request, 'groups/group_absent_followup.html', context)
 
 @login_required
+def multi_group_absent_followup_selected(request):
+    group_leader = request.user.id
+    session = request.GET.get('session_attended')
+    group = session_attended_options.objects.get(id=session)
+    absentees = session_absent.objects.filter(session_missed_id=group.id, follow_up_Feedback=None)
+    print(absentees)
+    absentee_count = absentees.count()
+    context = {
+        'absentees': absentees,
+        'absentee_count': absentee_count,
+    }
+   
+
+    return render(request, 'groups/multi_group_absent_followup_selected.html', context)
+
+
+
+@login_required
 def group_absentee_followup(request, pk):
     absentee = session_absent.objects.get(pk=pk)
     if request.method=='POST':
@@ -650,6 +668,8 @@ def group_absentee_followup(request, pk):
 @login_required
 def group_absent_view_feedback(request):
     group_leader = request.user.id
+    session = request.GET.get('session_attended')
+    print(session)
     group = session_attended_options.objects.filter(group_leader_id=group_leader)
     if len(group) == 1:
         group = group[0]

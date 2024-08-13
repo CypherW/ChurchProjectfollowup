@@ -1,0 +1,22 @@
+  <table class="table table-hover" id="absent_table">
+      <thead class="bg-info">
+        <tr class="text-white">
+          <th class="" scope="col">Name</th>
+          <th class="text-nowrap" scope="col">Date Missed</th>
+          <th class="text-nowrap" scope="col">Follow Up
+            <span class="badge rounded-pill bg-danger ml-6">{{ absentee_count }}</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for absentee in absentees %}
+        <tr>
+          <td class=""><a href="{% url 'group_person_detail' absentee.absentee.id %}">{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</a></td>
+          <td class="text-nowrap">{{ absentee.dateofmeeting|date:"d-F-Y"}}</td>
+          <td> <a button class="btn btn-primary bg-info btn-sm m-2" href="{% url 'group_absentee_followup' absentee.id %}">Follow Up</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
