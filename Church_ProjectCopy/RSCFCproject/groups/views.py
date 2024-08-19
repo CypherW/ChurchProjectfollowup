@@ -687,8 +687,7 @@ def group_absent_view_feedback(request, meeting):
 @login_required
 def group_absentee_view_feedback(request, pk):
     absentee = session_absent.objects.get(pk=pk)
-    meeting = 'ylife'
-    print(absentee.id)
+    meeting = 'Ylife'
     
     context = {
         'absentee': absentee,

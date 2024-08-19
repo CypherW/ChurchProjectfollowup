@@ -3,13 +3,37 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Converts, Followups, Requests_Feedback, Link_Church, ATTENDCHURCH, Followed_Up_by
-from .forms import ConvertsForm, PrayerRequestForm, FollowupForm, LinkchurchForm
+from .forms import ConvertsForm, PrayerRequestForm, FollowupForm, LinkchurchForm, convertForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .filters import ConvertsFilter
 from user.models import Profile
+from people.forms import Person_Form
 
 # Create your views here.
+
+@login_required
+def add_new_convert(request):
+    if request.method=='POST':
+        form = Person_Form(request.POST)
+        form1 = convertForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.createdBy = User.objects.get(pk=request.user.pk)
+            instance.save()
+            return redirect('group_attendance')
+    else:
+        form = Person_Form()
+        form1 = convertForm()
+    context= {
+        'form': form,
+        'form1': form1,
+    }
+    return render(request, 'SalvationFollowUps/Add_New_Convert.html', context)
+
+
+
+##### OLD VIEWS NEED TO BE REMOVED
 @login_required
 def index(request):
     followUps = Followups.objects.all()

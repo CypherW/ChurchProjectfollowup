@@ -1,0 +1,35 @@
+{% extends 'partials/groups_base.html' %}
+{% block title %} Add Person {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-6 offset-md-3">
+            <div class="border bg-white">
+                <div class="card-header bg-info text-white">
+                    <h3>Add New Convert</h3>
+                  </div>
+                  <div class="p-3">               
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    {{ form1 }}
+
+                </form>
+                <div class="mt-2" id="buttons">
+                    <a class="btn btn-danger m-3" href="{% url 'add_new_convert' %}">Cancel</a>
+                    <input class="btn btn-info" type="submit" value="Confirm">
+                    </div>
+                </div>
+                
+            </div>
+            </div>
+        </div>
+        </div>
+
+{% endblock %}

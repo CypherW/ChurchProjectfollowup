@@ -2,8 +2,31 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 import datetime
+from people.models import People
 
 # Create your models here.
+
+ContactPreference = (
+    ('Phone', 'Phone'),
+    ('Email', 'Email'),
+)
+
+decission = (
+    ('First Time', 'First Time'),
+    ('Rededication', 'Rededication'),
+)
+
+class salvations(models.Model):
+    convert = models.ForeignKey(People, models.CASCADE, null=True)
+    dateofcommitment = models.DateField(default=datetime.date.today(), verbose_name = 'Date:')
+    contactMethod = models.CharField(max_length=20, choices=ContactPreference, null=False, blank=False, default='Unspecified')
+    decissionType = models.CharField(max_length=20, choices=decission, null=False, blank=False, default="Unspecified")
+
+    class Meta:
+        verbose_name_plural = 'Salvations'
+
+
+##### OLD MODELS - NEED TO BE REMOVED
 LANGUAGE = (
     ('African', 'African'),
     ('Afrikaans', 'Afrikaans'),
