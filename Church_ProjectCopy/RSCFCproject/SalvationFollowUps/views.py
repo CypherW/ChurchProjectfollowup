@@ -21,7 +21,11 @@ def add_new_convert(request):
             instance = form.save(commit=False)
             instance.createdBy = User.objects.get(pk=request.user.pk)
             instance.save()
-            return redirect('group_attendance')
+            if form1.is_valid():
+                salvationDetails = form1.save(commit=False)
+                salvationDetails.convert_id = instance.id
+                salvationDetails.save()
+            return redirect('add_new_convert')
     else:
         form = Person_Form()
         form1 = convertForm()
