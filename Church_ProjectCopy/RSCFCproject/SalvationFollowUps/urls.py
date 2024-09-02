@@ -4,12 +4,12 @@ from . import views
 urlpatterns = [
 
     path('salvations/add_new_convert', views.add_new_convert, name='add_new_convert'),
+    path('salvations/new_convert_followup', views.new_convert_followup, name='new_convert_followup'),
 
     #### OLD URLS NEED TO BE REMOVED
     path('dashboard/', views.index, name='dashboard-index'),
     path('staff/', views.staff, name='dashboard-staff'),
     path('staff/detail/<int:pk>', views.staff_detail, name='dashboard-staff-detail'),
-    path('salvations/', views.salvations, name='dashboard-salvations'),
     path('salvations/delete/<int:pk>/', views.converts_delete, name='dashboard-salvations-delete'),
     path('salvations/update/<int:pk>/', views.converts_update, name='dashboard-salvations-update'),
     path('followup_due/', views.Followup_due, name='dashboard-followup_due'),

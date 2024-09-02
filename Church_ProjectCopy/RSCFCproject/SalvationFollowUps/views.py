@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Converts, Followups, Requests_Feedback, Link_Church, ATTENDCHURCH, Followed_Up_by
+from .models import salvations, Converts, Followups, Requests_Feedback, Link_Church, ATTENDCHURCH, Followed_Up_by
 from .forms import ConvertsForm, PrayerRequestForm, FollowupForm, LinkchurchForm, convertForm
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -34,6 +34,16 @@ def add_new_convert(request):
         'form1': form1,
     }
     return render(request, 'SalvationFollowUps/Add_New_Convert.html', context)
+
+@login_required
+def new_convert_followup(request):
+    Followups_due = salvations.objects.all()
+    due_count = Followups_due.count()
+    context = {
+        'Followups_due': Followups_due,
+        'due_count': due_count,
+    }
+    return render(request, 'SalvationFollowUps/new_Convert_Followup.html', context)
 
 
 
@@ -120,44 +130,6 @@ def staff_detail(request, pk):
     }
     return render(request, 'dashboard/staff_detail.html', context)
 
-@login_required
-def salvations(request):
-    converts = Converts.objects.all()
-    volunteers = User.objects.all()
-    volunteers_count = volunteers.count()
-    converts_count = converts.count()
-    followUpdue = Followups.objects.filter(next_followUpdate__lte=datetime.date.today())
-    FollowUpdue_count = followUpdue.count()
-    connect_church = Followups.objects.filter(AttendChurch='Away: want to be connected')
-    connect_church_count = connect_church.count()
-    converts_filter = ConvertsFilter(request.GET, queryset=converts)
-    converts_filter_count = converts_filter.qs.count
-    if request.method == 'POST':
-        form = ConvertsForm(request.POST)
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.createdBy = User.objects.get(pk=request.user.pk)
-            instance.save()
-            obj = Followups()
-            obj.convert = instance
-            obj.save()
-            convert_name = form.cleaned_data.get('Name')
-            messages.success(request, f'{convert_name} has been added')
-            return redirect('dashboard-salvations')
-    else:
-        form = ConvertsForm()
-    context = {
-        'converts': converts,
-        'volunteers_count': volunteers_count,
-        'converts_count': converts_count,
-        'form': form,
-        'FollowUpdue_count': FollowUpdue_count,
-        'connect_church_count': connect_church_count,
-        'converts_filter': converts_filter,
-        'converts_filter_count': converts_filter_count
-        
-    }
-    return render(request, 'dashboard/salvations.html', context)
 
 @login_required
 def converts_delete(request, pk):

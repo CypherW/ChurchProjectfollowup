@@ -51,11 +51,6 @@ def load_session_members(request):
     date_of_visit = request.GET.get('dateofvisit')
     attendee_list = session_attendance.objects.filter(dateofvisit=date_of_visit, session_attended=session_id).values_list('attendee')
     attendee_list_count = attendee_list.count()
-
-    if session_id == '2':
-        session_id = '1'
-    elif session_id == '4':
-        session_id = '3'
     member_list = group_membership.objects.filter(group_id=session_id, active=True)
     attendee_list = list(attendee_list.values_list('attendee_id', flat=True))
     member_list = member_list.exclude(member_id__in=attendee_list)
@@ -74,10 +69,6 @@ def load_searchByTyping_add_present(request):
     attendee_list = session_attendance.objects.filter(dateofvisit=date_of_visit, session_attended=session_id).values_list('attendee')
     attendee_list_count = attendee_list.count()
     search_term = request.GET.get('search')
-    if session_id == '2':
-        session_id = '1'
-    elif session_id == '4':
-        session_id = '3'
     member_list = group_membership.objects.filter(group_id=session_id, active=True)
     attendee_list = list(attendee_list.values_list('attendee_id', flat=True))
     member_list = member_list.exclude(member_id__in=attendee_list)
@@ -149,10 +140,6 @@ def prayer_cell_feedback_form(request):
             instance.meeting_hosted_id = session_attended.id
             instance.save()
             attendee_list = session_attendance.objects.filter(dateofvisit=instance.date_of_meeting, session_attended=instance.meeting_hosted_id).values_list('attendee')
-            if instance.meeting_hosted_id == '2':
-                instance.meeting_hosted_id = '1'
-            elif instance.meeting_hosted_id == '4':
-                instance.meeting_hosted_id = '3'
             member_list = group_membership.objects.filter(group_id=instance.meeting_hosted_id, active=True)
             attendee_list = list(attendee_list.values_list('attendee_id', flat=True))
             member_list = member_list.exclude(member_id__in=attendee_list)
