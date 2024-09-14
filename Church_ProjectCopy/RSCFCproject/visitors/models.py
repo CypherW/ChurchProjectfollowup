@@ -9,7 +9,7 @@ from SalvationFollowUps.models import Converts
 class visit_date(models.Model):
     visitor = models.OneToOneField(Converts, models.CASCADE, null=True)
     createdby =  models.ForeignKey(User, models.CASCADE, null=True, blank=True)
-    dateofvisit = models.DateTimeField(default=datetime.date.today())
+    dateofvisit = models.DateTimeField(default=timezone.now)
 
 
     def __str__(self):

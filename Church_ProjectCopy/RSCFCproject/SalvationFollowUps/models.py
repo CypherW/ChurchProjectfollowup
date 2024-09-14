@@ -18,7 +18,7 @@ decission = (
 
 class salvations(models.Model):
     convert = models.ForeignKey(People, models.CASCADE, null=True)
-    dateofcommitment = models.DateField(default=datetime.date.today(), verbose_name = 'Date:')
+    dateofcommitment = models.DateField(default=timezone.now, verbose_name = 'Date:')
     contactMethod = models.CharField(max_length=20, choices=ContactPreference, null=False, blank=False, default='Unspecified')
     decissionType = models.CharField(max_length=20, choices=decission, null=False, blank=False, default="Unspecified")
 
@@ -112,7 +112,7 @@ class Followups(models.Model):
     Language = models.CharField(max_length=20, choices=LANGUAGE, null=False, blank=True)
     AttendChurch = models.CharField(max_length=30, choices=ATTENDCHURCH, null=False, blank=False, default='Unknown')
     date = models.DateTimeField(auto_now_add=True)
-    next_followUpdate = models.DateTimeField(default=datetime.date.today())
+    next_followUpdate = models.DateTimeField(default=timezone.now)
 
     class Meta:
         verbose_name_plural = 'Followups'

@@ -39,12 +39,11 @@
                     </tr>
                     <tr>
                       <th scope="row">Email</th>
-                      <td>{{ person.EmailAddress }}</td>
-                     
+                      <td><a href="mailto:{{ person.EmailAddress }}">{{ person.EmailAddress }}</a></td>                     
                     </tr>
                     <tr>
                       <th scope="row">Phone</th>
-                      <td>{{ person.CellNumber }}</td>
+                      <td><a href="tel:{{ person.CellNumber}}">{{ person.CellNumber }}</td>
                     </tr>
                     <tr>
                       <th scope="row">Area</th>

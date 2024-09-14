@@ -11,7 +11,7 @@
         <thead  class="sticky-top bg-info">
           <tr class="text-white">
             <th class="" scope="col">Name</th>
-            <th class="" scope="col">Age</th>
+            <th class="" scope="col">Phone Number</th>
             <th class="" scope="col">Gender</th>
             <th id="id_present_attendance" class="" scope="col"
             hx-get="{% url 'update_attending_count' %}"
@@ -24,7 +24,7 @@
     {% for member in members %}
     <tr id="row_{{ member.member_id }}">
         <td><a href="{% url 'group_person_detail' member.member_id %}">{{ member.member.Name }} {{ member.member.Surname }}</a></td>
-        <td>{{ member.member.age }}</td>
+        <td><a href="tel:{{ member.member.CellNumber}}">{{ member.member.CellNumber }}</td>
         <td>{{ member.member.Gender }}</td>
         <td>
             <a class="form-check form-switch">
@@ -34,7 +34,7 @@
                        hx-include="#id_session_attended, #id_dateofvisit"
                        hx-on:mark_attendee_present="this.closest('tr').remove()"
                        name="" id="{{ member.pk }}">
-                <label class="form-check-label" for="flexSwitchCheckDefault">Absent/Present</label>
+                <label class="form-check-label" for="flexSwitchCheckDefault">Mark Present</label>
             </a>
         </td>
     </tr>

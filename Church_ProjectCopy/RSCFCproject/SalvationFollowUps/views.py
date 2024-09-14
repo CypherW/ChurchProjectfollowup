@@ -45,6 +45,16 @@ def new_convert_followup(request):
     }
     return render(request, 'SalvationFollowUps/new_Convert_Followup.html', context)
 
+@login_required
+def new_Convert_feedback(request, pk):
+    new_convert = salvations.objects.get(id=pk)
+    print(new_convert)
+
+    context = { 
+        'new_convert': new_convert,
+    }
+    return render(request, 'SalvationFollowUps/new_Convert_feedback.html', context)
+
 
 
 ##### OLD VIEWS NEED TO BE REMOVED

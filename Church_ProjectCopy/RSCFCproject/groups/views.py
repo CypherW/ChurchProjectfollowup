@@ -227,8 +227,10 @@ def group_addPersonForm(request):
             return redirect('group_attendance')
     else:
         form = Person_Form()
+    group_options = session_attended_options.objects.all()
     context= {
         'form': form,
+        'group_options': group_options,
     }
     return render(request, 'groups/addPerson.html', context)
 

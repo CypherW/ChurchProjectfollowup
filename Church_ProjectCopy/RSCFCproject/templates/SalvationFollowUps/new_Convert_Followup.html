@@ -36,7 +36,7 @@
             
             <td><a href="{% url 'group_person_detail' convert.convert.id %}">{{ convert.convert.Name }} {{convert.convert.Surname}}</a></td>
             <td class="text-nowrap">{{ convert.dateofcommitment|date:"d-F-Y" }}</td>
-            <td><a button class="btn btn-primary bg-info btn-sm m-2" href="">Follow Up</a></td>
+            <td><a button class="btn btn-primary bg-info btn-sm m-2" href="{% url 'new_Convert_feedback' convert.id %}">Follow Up </a></td>
             
         </tr>
         {% endfor %}
