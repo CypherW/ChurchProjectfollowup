@@ -1,6 +1,7 @@
 from django import forms
 from people.models import People
 from .models import session_attendance, session_attended_options, prayer_cell_feedback, session_absent
+from datetime import date
 
 
 class Person_Form(forms.ModelForm):
@@ -17,10 +18,8 @@ class Date_Attended_Form(forms.ModelForm):
         widgets = {
             'dateofvisit': forms.DateInput(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_session_attended', 'type': 'date', 'style': 'width: 130px;', 'class': 'm-2'}),
             'session_attended': forms.Select(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_dateofvisit', 'class': 'm-2'})    
-              }
+              }     
         
-        
-
     def __init__(self, group_leader_id, *args, **kwargs):
         super(Date_Attended_Form, self).__init__(*args, **kwargs)
         # Filter the queryset for the 'session_attended' field based on the group leader ID
@@ -70,16 +69,24 @@ class prayer_cell_feedbackForm(forms.ModelForm):
 class absentee_followup_form(forms.ModelForm):
 
     follow_up_Feedback = forms.CharField(required=True,
-         widget=forms.Textarea(attrs={'class': 'small-textarea', 'rows': 4, 'cols': 30}),
+         widget=forms.Textarea(attrs={'class': 'small-textarea mt-2', 'rows': 3, 'cols': 5}),
         label='Feedback:'
      )
+    
+    def __init__(self, *args, **kwargs):
+            super(absentee_followup_form, self).__init__(*args, **kwargs)
+            self.initial['follow_up_date'] = date.today()
+            
     class Meta:
+
         model = session_absent
-        fields = ['follow_up_date', 'follow_up_Feedback']
+        fields = ['follow_up_Feedback', 'follow_up_date']
 
         widgets = {
-            'follow_up_date': forms.DateInput(attrs={'type': 'date', 'style': 'width: 130px;', 'class': 'm-2'}) 
+            'follow_up_date': forms.DateInput(attrs={'type': 'date', 'style': 'width: 150px; margin-right-3'}) 
               }
+        
+        
         
 class multiple_Group_absentee_feedback_form(forms.ModelForm):
     class Meta:

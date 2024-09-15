@@ -9,20 +9,21 @@
 
 <div class="col-md-6 offset-md-3 p-3">
   <div class="card-header bg-info text-white id={{date}}">
-    <h4> Followup Form: </h4>
+    <h5> <b>Followup Form: {{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</h5>
   </div>
-  <div class="card shadow text-center p-3">
-  <div class="container d-flex justify-content-center">
-    <h5>{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}: {{ absentee.absentee.CellNumber }}</h5>
-  </div>
-  <div class="container d-flex justify-content-center">
+  <div class="card shadow p-3">
+  <div class="container mt-2">
+    <p><h6><b>Phone number:</b> <a href="tel:{{ absentee.absentee.CellNumber}}">{{ absentee.absentee.CellNumber }}</a></h6></p>
+    <p><h6><b>Email Address:</b> <a href="mailto:{{ person.EmailAddress }}">{{ absentee.absentee.EmailAddress }}</a> </h6></p>
+    </div>
+  <div class="container mt-3">
   <form method="POST">
     {% csrf_token %}
-    {{ form }}
+    {{ form|crispy }}
 
-  <div class="mt-2" id="buttons">
-  <a class="btn btn-danger btn-sm" href="{% url 'group_absent_followup' %}">Cancel</a>
-  <input class="btn btn-primary bg-info btn-sm" type="submit" value="Submit">
+  <div class="mt-2 d-flex justify-content-md-center" id="buttons">
+  <a class="btn btn-danger btn-sm m-2" href="{% url 'group_absent_followup' %}">Cancel</a>
+  <input class="btn btn-primary bg-info btn-sm m-2" type="submit" value="Submit">
   </div>
   </form>
   </div>

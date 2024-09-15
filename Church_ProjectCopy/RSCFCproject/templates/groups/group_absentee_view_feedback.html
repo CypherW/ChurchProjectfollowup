@@ -9,16 +9,20 @@
 
 <div class="col-md-6 offset-md-3 p-3">
   <div class="card-header bg-info text-white id={{date}}">
-    <h4> Feedback: {{ absentee.follow_up_date|date:"d-F-Y" }}</h4>
+    <h5> Feedback: {{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</h5>
   </div>
   <div class="card shadow p-3">
   <div class="container">
-    <h3><a href="{% url 'group_person_detail' absentee.absentee.id %}">{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</a></h3>
     <br>
     <div class="column">
     <p><b>Date of meeting missed: </b> {{ absentee.dateofmeeting|date:"d-F-Y" }}</p>
     </div>
-    <b>Feedback:</b> {{ absentee.follow_up_Feedback }}
+    <div>
+    <p><b>Date of followup:</b> {{ absentee.follow_up_date|date:"d-F-Y" }}</p>
+    </div>
+    <div>
+    <p><b>Feedback:</b> {{ absentee.follow_up_Feedback }}</p>
+    </div>
   </div>
   <div class="d-flex justify-content-center mt-3">
   <a button class ="btn btn-primary bg-info  btn-sm m-2" href="{% url 'group_absent_view_feedback' absentee.session_missed %}">Previous Feedback</a>

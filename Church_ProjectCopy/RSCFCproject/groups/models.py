@@ -25,7 +25,7 @@ class session_attended_options(models.Model):
 class session_attendance(models.Model):
     attendee = models.ForeignKey(People, models.CASCADE, null=True)
     dateofvisit = models.DateField(default=timezone.now, verbose_name = 'Date:')
-    session_attended = models.ForeignKey(session_attended_options, models.CASCADE, null=False, blank=False)
+    session_attended = models.ForeignKey(session_attended_options, models.CASCADE, null=False, blank=False, verbose_name = 'Meeting:')
     createdby =  models.ForeignKey(User, models.CASCADE, null=False)
     creation_date = models.DateTimeField(auto_now_add=True)
 
