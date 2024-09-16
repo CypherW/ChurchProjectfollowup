@@ -12,9 +12,12 @@ class Person_Form(forms.ModelForm):
 
 class Date_Attended_Form(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, group_leader_id, *args, **kwargs):
             super(Date_Attended_Form, self).__init__(*args, **kwargs)
-            self.initial['dateofvisit'] = timezone.now().date()
+            self.initial['dateofvisit'] = timezone.localtime().date()
+
+             # Filter the queryset for the 'session_attended' field based on the group leader ID
+            self.fields['session_attended'].queryset = session_attended_options.objects.filter(group_leader_id=group_leader_id)
 
     class Meta:
         model = session_attendance
@@ -24,12 +27,8 @@ class Date_Attended_Form(forms.ModelForm):
         widgets = {
             'dateofvisit': forms.DateInput(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_session_attended', 'type': 'date', 'style': 'width: 130px;', 'class': 'm-2'}),
             'session_attended': forms.Select(attrs={'hx-get': 'load_session_members', 'hx-target': '#attendance_table', 'hx-include': '#id_dateofvisit', 'class': 'm-2'})    
-              }     
-        
-    def __init__(self, group_leader_id, *args, **kwargs):
-        super(Date_Attended_Form, self).__init__(*args, **kwargs)
-        # Filter the queryset for the 'session_attended' field based on the group leader ID
-        self.fields['session_attended'].queryset = session_attended_options.objects.filter(group_leader_id=group_leader_id)
+              }
+       
 
 class group_meetingsForm(forms.ModelForm):
     model = session_attendance
@@ -81,7 +80,7 @@ class absentee_followup_form(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
             super(absentee_followup_form, self).__init__(*args, **kwargs)
-            self.initial['follow_up_date'] = timezone.now().date()
+            self.initial['follow_up_date'] = timezone.localtime().date()
             
     class Meta:
 
