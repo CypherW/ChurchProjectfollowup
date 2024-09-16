@@ -10,6 +10,11 @@ class Person_Form(forms.ModelForm):
         fields = ['Name', 'Surname', 'CellNumber', 'EmailAddress', 'birthday', 'area', 'Gender']
 
 class Date_Attended_Form(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+            super(absentee_followup_form, self).__init__(*args, **kwargs)
+            self.initial['dateofvisit'] = date.today()
+
     class Meta:
         model = session_attendance
 

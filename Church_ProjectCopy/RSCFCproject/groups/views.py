@@ -7,7 +7,7 @@ from people.models import People, guardianRelation
 from .models import session_attendance, group_membership, session_attended_options, prayer_cell_feedback, session_absent
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.http import require_http_methods
 from .forms import Person_Form, Date_Attended_Form, group_type_select, present_select_fieldsForm, prayer_cell_feedbackForm, absentee_followup_form, multiple_Group_absentee_feedback_form
 from django.template import RequestContext
@@ -341,6 +341,7 @@ def present_bysession(request):
     return render(request, 'groups/present_bysession.html', context)
 
 @login_required
+@permission_required('view_prayer_cell_feedback', raise_exception=True)
 def meeting_occurrences(request):
     session = session_attendance.objects.all()
     eventFilter = group_meetingsFilter(request.GET, queryset=session)
