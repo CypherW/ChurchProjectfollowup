@@ -2,6 +2,7 @@ from django import forms
 from people.models import People
 from .models import session_attendance, session_attended_options, prayer_cell_feedback, session_absent
 from datetime import date
+from django.utils import timezone
 
 
 class Person_Form(forms.ModelForm):
@@ -13,7 +14,7 @@ class Date_Attended_Form(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
             super(Date_Attended_Form, self).__init__(*args, **kwargs)
-            self.initial['dateofvisit'] = date.today()
+            self.initial['dateofvisit'] = timezone.now().date()
 
     class Meta:
         model = session_attendance
@@ -80,7 +81,7 @@ class absentee_followup_form(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
             super(absentee_followup_form, self).__init__(*args, **kwargs)
-            self.initial['follow_up_date'] = date.today()
+            self.initial['follow_up_date'] = timezone.now().date()
             
     class Meta:
 
