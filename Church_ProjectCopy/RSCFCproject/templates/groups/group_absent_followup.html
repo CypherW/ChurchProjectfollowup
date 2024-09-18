@@ -68,6 +68,7 @@
           <th class="text-nowrap" scope="col">Follow Up
             <span class="badge rounded-pill bg-danger ml-6">{{ absentee_count }}</span>
           </th>
+          <th class="text-nowrap" scope="col">Leave Group</th>
         </tr>
       </thead>
       <tbody>
@@ -76,6 +77,7 @@
           <td class=""><a href="{% url 'group_person_detail' absentee.absentee.id %}">{{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</a></td>
           <td class="text-nowrap">{{ absentee.dateofmeeting|date:"d-F-Y"}}</td>
           <td> <a button class="btn btn-primary bg-info btn-sm m-2" href="{% url 'group_absentee_followup' absentee.id %}">Follow Up</a></td>
+          <td> <a button class="btn btn-warning bg-warning btn-sm m-2" href="{% url 'group_remove_member' absentee.id %}">Remove</a></td>
         </tr>
         {% endfor %}
       </tbody>

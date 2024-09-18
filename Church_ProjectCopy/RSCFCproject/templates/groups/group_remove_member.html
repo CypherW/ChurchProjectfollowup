@@ -1,0 +1,33 @@
+{% extends 'partials/groups_base.html' %}
+{% block title %} Feedback Form {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<div class="col-md-6 offset-md-3 p-3">
+  <div class="card-header bg-info text-white id={{date}}">
+    <h5> <b>Remove From Group: {{ absentee.absentee.Name }} {{ absentee.absentee.Surname }}</h5>
+  </div>
+  <div class="card shadow p-3">
+  <div class="container mt-2">
+    <p><h6><b>Phone number:</b> <a href="tel:{{ absentee.absentee.CellNumber}}">{{ absentee.absentee.CellNumber }}</a></h6></p>
+    <p><h6><b>Email Address:</b> <a href="mailto:{{ person.EmailAddress }}">{{ absentee.absentee.EmailAddress }}</a> </h6></p>
+    </div>
+  <div class="container mt-3">
+  <form method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+
+  <div class="mt-2 d-flex justify-content-md-center" id="buttons">
+  <a class="btn btn-danger btn-sm m-2" href="{% url 'group_absent_followup' %}">Cancel</a>
+  <input class="btn btn-primary bg-info btn-sm m-2" type="submit" value="Submit">
+  </div>
+  </form>
+  </div>
+</div>
+</div>
+
+{% endblock %}

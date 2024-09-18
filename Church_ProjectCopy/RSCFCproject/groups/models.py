@@ -55,6 +55,16 @@ class session_absent(models.Model):
             models.UniqueConstraint(fields=['absentee', 'dateofmeeting', 'session_missed'], name="%(app_label)s_%(class)s_unique")
         ]
 
+class leaving_group(models.Model):
+    member_leaving = models.ForeignKey(People, models.CASCADE, null=True)
+    date_withdrew = models.DateField(default=timezone.now, verbose_name = 'Date:')
+    creation_date = models.DateTimeField(auto_now_add=True)
+    reason_leaving = models.TextField(verbose_name='Feedback:', null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.reason_leaving}, {self.member_leaving}'
+          
+
 class group_membership(models.Model):
     member = models.ForeignKey(People, models.CASCADE, null=True)
     group = models.ForeignKey(session_attended_options, models.CASCADE, null=True)

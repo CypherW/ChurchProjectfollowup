@@ -1,6 +1,6 @@
 from django import forms
 from people.models import People
-from .models import session_attendance, session_attended_options, prayer_cell_feedback, session_absent
+from .models import session_attendance, session_attended_options, prayer_cell_feedback, session_absent, leaving_group
 from datetime import date
 from django.utils import timezone
 
@@ -89,6 +89,27 @@ class absentee_followup_form(forms.ModelForm):
 
         widgets = {
             'follow_up_date': forms.DateInput(attrs={'type': 'date', 'style': 'width: 150px; margin-right-3'}) 
+              }
+        
+
+class remove_from_group_form(forms.ModelForm):
+
+    reason_leaving = forms.CharField(required=True,
+         widget=forms.Textarea(attrs={'class': 'small-textarea mt-2', 'rows': 3, 'cols': 5}),
+        label='Reason Leaving Group:'
+     )
+    
+    def __init__(self, *args, **kwargs):
+            super(remove_from_group_form, self).__init__(*args, **kwargs)
+            self.initial['follow_up_date'] = timezone.localtime().date()
+            
+    class Meta:
+
+        model = leaving_group
+        fields = ['reason_leaving', 'date_withdrew']
+
+        widgets = {
+            'date_withdrew': forms.DateInput(attrs={'type': 'date', 'style': 'width: 150px; margin-right-3'}) 
               }
         
         

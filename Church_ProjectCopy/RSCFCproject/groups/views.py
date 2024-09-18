@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.http import require_http_methods
-from .forms import Person_Form, Date_Attended_Form, group_type_select, present_select_fieldsForm, prayer_cell_feedbackForm, absentee_followup_form, multiple_Group_absentee_feedback_form
+from .forms import Person_Form, Date_Attended_Form, group_type_select, present_select_fieldsForm, prayer_cell_feedbackForm, absentee_followup_form, multiple_Group_absentee_feedback_form, remove_from_group_form
 from django.template import RequestContext
 from .filters import group_meetingsFilter
 from datetime import datetime
@@ -457,7 +457,8 @@ def load_event_date_attendance(request):
     count = attendee_list.count()
     member_list = group_membership.objects.filter(group_id=session_id, active=True)
     members = member_list.count()
-    absent = members - count
+    absentee_list = session_absent.objects.filter(dateofmeeting=formatted_date, session_missed=session_id)
+    absent = absentee_list.count()
     id_add = random.randint(1,100)*random.randint(1,100)
     id_add = str(id_add)
     try:
@@ -662,6 +663,36 @@ def group_absentee_followup(request, pk):
     }
 
     return render(request, 'groups/group_absentee_followup.html', context)
+
+@login_required
+def group_remove_member(request, pk):
+    absentee = session_absent.objects.get(pk=pk)
+    if request.method=='POST':
+        form = remove_from_group_form(request.POST, instance=absentee)
+        instance = form.save(commit=False)
+        session_id = instance.session_missed_id
+        if form.is_valid():
+            reason = form.cleaned_data['reason_leaving']
+        absentee_id = instance.absentee_id
+        membership_obj = group_membership.objects.get(group_id=session_id, member_id=absentee_id)
+        membership_obj.active = False
+        membership_obj.save()
+        meeting_missed_obj = session_absent.objects.get(id=pk)
+        print(meeting_missed_obj)
+        meeting_missed_obj.follow_up_Feedback = "Has left group: " + reason
+        meeting_missed_obj.save()
+
+
+        return redirect('group_absent_followup')
+    else:
+        form = remove_from_group_form(instance=absentee)
+
+    context = {
+        'absentee': absentee,
+        'form': form,
+    }
+
+    return render(request, 'groups/group_remove_member.html', context)
 
 @login_required
 def group_absent_view_feedback(request, meeting):
