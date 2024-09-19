@@ -16,7 +16,6 @@
           <tr class="text-white">
             <th class="header1" scope="col">Name</th>
             <th class="header1" scope="col">Phone Number</th>
-            <th class="header1" scope="col">Gender</th>
             <th id="id_present_attendance" class="header1" scope="col"
             hx-get="{% url 'update_present_count' %}"
             hx-trigger="remove_attendee from:body"
@@ -30,7 +29,6 @@
             <tr>
               <td><a href="{% url 'group_person_detail' attendee.attendee.id %}">{{ attendee.attendee.Name }} {{ attendee.attendee.Surname }} </a></td>
               <td><a href="tel:{{ attendee.attendee.CellNumber}}">{{ attendee.attendee.CellNumber }}</td>
-              <td>{{ attendee.attendee.Gender }}</td>
               <td>
                 <a class="form-check form-switch">
                 <input class="form-check-input switch" type="checkbox" hx-delete="{% url 'remove_attendee' attendee.pk %}" hx-trigger="change" 

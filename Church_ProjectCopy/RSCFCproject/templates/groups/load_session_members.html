@@ -11,8 +11,7 @@
         <thead  class="sticky-top bg-info">
           <tr class="text-white">
             <th class="" scope="col">Name</th>
-            <th class="" scope="col">Phone Number</th>
-            <th class="" scope="col">Gender</th>
+            <th class="text-nowrap" scope="col">Phone Number</th>
             <th id="id_present_attendance" class="" scope="col"
             hx-get="{% url 'update_attending_count' %}"
             hx-trigger="mark_attendee_present from:body"
@@ -25,7 +24,6 @@
     <tr id="row_{{ member.member_id }}">
         <td><a href="{% url 'group_person_detail' member.member_id %}">{{ member.member.Name }} {{ member.member.Surname }}</a></td>
         <td><a href="tel:{{ member.member.CellNumber}}">{{ member.member.CellNumber }}</td>
-        <td>{{ member.member.Gender }}</td>
         <td>
             <a class="form-check form-switch">
                 <input class="form-check-input switch" type="checkbox"

@@ -75,8 +75,7 @@ def load_searchByTyping_add_present(request):
     member_list = member_list.order_by('member_id__Name')
     member_list = member_list.filter(
             member__Name__istartswith=search_term) | member_list.filter(
-            member__Surname__istartswith=search_term) | member_list.filter(
-                member__Gender__istartswith=search_term)
+            member__Surname__istartswith=search_term)
     context = {
         'members': member_list,
         'attendee_list_count': attendee_list_count,
@@ -341,7 +340,7 @@ def present_bysession(request):
     return render(request, 'groups/present_bysession.html', context)
 
 @login_required
-@permission_required('view_prayer_cell_feedback', raise_exception=True)
+@permission_required('groups.view_prayer_cell_feedback', raise_exception=True)
 def meeting_occurrences(request):
     session = session_attendance.objects.all()
     eventFilter = group_meetingsFilter(request.GET, queryset=session)
@@ -396,8 +395,7 @@ def load_searchByTyping_attending(request):
     count = attendee_list.count()
     attendee_list = attendee_list.filter(
             attendee__Name__istartswith=search_term) | attendee_list.filter(
-            attendee__Surname__istartswith=search_term) | attendee_list.filter(
-                attendee__Gender__istartswith=search_term)
+            attendee__Surname__istartswith=search_term)
     context = {
         'count': count,
         'attendee_list': attendee_list

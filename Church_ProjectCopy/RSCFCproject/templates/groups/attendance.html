@@ -31,12 +31,7 @@
 <div class="topBar container d-flex justify-content-md-center">
   <div class="row row-cols-12 row-cols-md-12">
   <form method="POST" class="d-flex flex-wrap">
-    <a button class="btn btn-primary bg-info  btn-sm m-2" href="{% url 'addPersonForm' %}">Add
-      <svg xmlns="" width="16" height="16" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
-        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-        <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-      </svg>
-    </a>
+    
       <input class="m-2" type="text" id="searchField" placeholder="Search"
       hx-get="load_searchByTyping_add_present"
       hx-target="#attendance_table"
@@ -44,10 +39,20 @@
       hx-include="#id_session_attended, #id_dateofvisit"
       name="search"
       >
+  <div class="d-flex inline mb-2">
   {% csrf_token %}
   {{ form }}
+  </div>
+  <div class="d-flex inline">
   <a button class ="btn btn-primary bg-info  btn-sm m-2" href="{% url 'present_bysession' %}">View Present</a>
     <input class="btn btn-primary bg-info btn-sm m-2" type="submit" value="Give Feedback">
+    <a button class="btn btn-primary bg-info  btn-sm m-2" href="{% url 'addPersonForm' %}">Add
+      <svg xmlns="" width="16" height="16" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+        <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+      </svg>
+    </a>
+    </div>
   </form>
   </div>
   </div> 
@@ -62,8 +67,7 @@
       <thead class="bg-info">
         <tr class="text-white">
           <th class="" scope="col">Name</th>
-          <th class="" scope="col">Phone Number</th>
-          <th class="" scope="col">Gender</th>
+          <th class="text-nowrap" scope="col">Phone Number</th>
           <th class="" scope="col">Total: {{ attendee_list_count }}</th>
           <th class="" id="switchCount" scope="col"></th>
         </tr>

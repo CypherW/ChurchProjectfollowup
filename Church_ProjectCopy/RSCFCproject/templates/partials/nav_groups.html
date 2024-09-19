@@ -34,7 +34,7 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li class="nav-item"><a class=" text-dark m-2 text-decoration-none" href="{% url 'group_attendance' %}">Attendance</a>
          </li>
-         {% if perms.prayer_cell_feedback.view %}
+         {% if perms.groups.view_prayer_cell_feedback %}
         <li class="nav-item"><a class=" text-dark m-2 text-decoration-none" href="{% url 'meeting_occurrences' %}">View Feedback</a>
         </li>
         {% endif %}
