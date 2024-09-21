@@ -10,6 +10,14 @@ class Person_Form(forms.ModelForm):
         model = People
         fields = ['Name', 'Surname', 'CellNumber', 'EmailAddress', 'birthday', 'area', 'Gender']
 
+        widgets = {
+            'Name': forms.TextInput (attrs={'hx-get': 'check_person_exists', 'hx-target': '#popup-container', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Surname'}),
+            'Surname': forms.TextInput (attrs= {'hx-get': 'check_person_exists', 'hx-target': '#popup-container', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Name'}),
+        }
+
+    """ hx-target="#validation-result" hx-include="#surname">
+    <input type="text" name="surname" id="surname" hx-get="{% url 'validate_name_surname' %}" hx-trigger="change" hx-target="#validation-result" hx-include="#name">"""
+
 class Date_Attended_Form(forms.ModelForm):
 
     def __init__(self, group_leader_id, *args, **kwargs):
@@ -41,6 +49,12 @@ class group_type_select(forms.Form):
                                                       widget=forms.Select(attrs={"hx-get": "load_event_dates", "hx-target": "#meeting_listings"}))
     
 class present_select_fieldsForm(forms.Form):
+
+    def __init__(self, group_leader_id, *args, **kwargs):
+            super(present_select_fieldsForm, self).__init__(*args, **kwargs)
+             # Filter the queryset for the 'session_attended' field based on the group leader ID
+            self.fields['meeting_attended'].queryset = session_attended_options.objects.filter(group_leader_id=group_leader_id)
+
     meeting_attended = forms.ModelChoiceField(queryset=session_attended_options.objects.all(),
                                               widget=forms.Select(attrs={"hx-get": "load_dates_present_by_session", "hx-target": "#id_date", 'class': 'm-2'}))
     date = forms.ModelChoiceField(queryset=session_attendance.objects.none(),

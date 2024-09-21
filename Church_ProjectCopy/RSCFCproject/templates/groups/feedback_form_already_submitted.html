@@ -1,0 +1,28 @@
+{% extends 'partials/groups_base.html' %}
+{% block title %} Attendance {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+
+<h1>Feedback Already Submitted</h1>
+<p>You have already submitted a feedback for this prayer cell group on this date.</p>
+
+<h2>Previous Submission:</h2>
+<ul>
+    <li>Date: {{ duplicate_form.date_of_meeting|date:"d-F-Y" }}</li>
+    <li>Prayer Cell Meeting: {{ duplicate_form.meeting_hosted }}</li>
+    <li>Word Discussed: {{ duplicate_form.word_discussed }}</li>
+    <li>Prayed About: {{ duplicate_form.prayed_about }}</li>
+    <li>Testimonies: {{ duplicate_form.testimonies }}</li>
+    <li>Prayer Requests: {{ duplicate_form.prayer_requests }}</li>
+
+    <!-- Display other fields -->
+</ul>
+
+<p><b>Please contact adminstrator if you need to change your feedback or if you are seeing this page on the first time trying to submit feedback for this prayer cell meeting.</b></p>
+
+{% endblock %}

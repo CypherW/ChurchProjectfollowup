@@ -7,6 +7,16 @@
 {% bootstrap_javascript %}
 {% load static %}
 
+<div id="modals-here"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-6 offset-md-3">
@@ -42,5 +52,19 @@
             </div>
         </div>
     </div>
+    <div id="popup-container"></div>
+
+    
+
+<script>
+document.addEventListener('htmx:afterRequest', function(event) {
+    if (event.detail.xhr.response.exists) {
+        const personId = event.detail.xhr.response.person_id;
+        if (confirm('This person already exists. Is it the same person?')) {
+            window.location.href = `/person/${personId}/`;
+        }
+    }
+});
+</script>
 </div>
 {% endblock %}

@@ -86,3 +86,9 @@ class prayer_cell_feedback(models.Model):
     testimonies = models.TextField(verbose_name='Testimonies:', null=True, blank=True)
     prayer_requests = models.TextField(verbose_name='Prayer Requests', null=True, blank=True)
     meeting_hosted = models.ForeignKey(session_attended_options, models.CASCADE, null=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['date_of_meeting', 'meeting_hosted'], name="%(app_label)s_%(class)s_unique")
+        ]
+

@@ -16,6 +16,7 @@ from datetime import datetime
 from django.utils import timezone
 from django_htmx.http import trigger_client_event
 from django.core.mail import send_mail
+from django.db import IntegrityError
 import json, random
 
 # Create your views here.
@@ -131,28 +132,41 @@ def prayer_cell_feedback_form(request):
     if request.method=='POST':
         form = prayer_cell_feedbackForm(request.POST)
         if form.is_valid():
-            instance = form.save(commit=False)
-            instance.date_of_meeting = request.GET.get('date')
-            instance.disciple_leader_id = request.user.id
-            meeting = request.GET.get('meeting')
-            session_attended = session_attended_options.objects.get(session_attended=meeting)
-            instance.meeting_hosted_id = session_attended.id
-            instance.save()
-            attendee_list = session_attendance.objects.filter(dateofvisit=instance.date_of_meeting, session_attended=instance.meeting_hosted_id).values_list('attendee')
-            member_list = group_membership.objects.filter(group_id=instance.meeting_hosted_id, active=True)
-            attendee_list = list(attendee_list.values_list('attendee_id', flat=True))
-            member_list = member_list.exclude(member_id__in=attendee_list)
-            member_list = member_list.order_by('member_id__Name')
-            for member in member_list:
-                absentee = People.objects.get(id= member.member_id)
-                group_absent_instance = session_absent(absentee=absentee)
-                group_absent_instance.dateofmeeting = instance.date_of_meeting
-                group_absent_instance.session_missed = session_attended
-                group_absent_instance.save()
-            return redirect('group_attendance')
+            try:
+                instance = form.save(commit=False)
+                instance.date_of_meeting = request.GET.get('date')
+                instance.disciple_leader_id = request.user.id
+                meeting = request.GET.get('meeting')
+                session_attended = session_attended_options.objects.get(session_attended=meeting)
+                instance.meeting_hosted_id = session_attended.id
+                instance.save()
+                attendee_list = session_attendance.objects.filter(dateofvisit=instance.date_of_meeting, session_attended=instance.meeting_hosted_id).values_list('attendee')
+                member_list = group_membership.objects.filter(group_id=instance.meeting_hosted_id, active=True)
+                attendee_list = list(attendee_list.values_list('attendee_id', flat=True))
+                member_list = member_list.exclude(member_id__in=attendee_list)
+                member_list = member_list.order_by('member_id__Name')
+                for member in member_list:
+                    absentee = People.objects.get(id= member.member_id)
+                    group_absent_instance = session_absent(absentee=absentee)
+                    group_absent_instance.dateofmeeting = instance.date_of_meeting
+                    group_absent_instance.session_missed = session_attended
+                    group_absent_instance.save()
+                return redirect('group_attendance')
+            except IntegrityError:
+                # Handle unique constraint violation
+                meeting_date = request.GET.get('date')
+                meeting = request.GET.get('meeting')
+                meeting_hosted_id = session_attended.id
+                print(meeting_hosted_id)
+                duplicate_form = prayer_cell_feedback.objects.get(date_of_meeting=meeting_date, meeting_hosted=meeting_hosted_id)
+                return render(request, 'groups/feedback_form_already_submitted.html', {
+                    'form': form,
+                    'duplicate_form': duplicate_form,
+                })
     else:
         form = prayer_cell_feedbackForm()
     meeting = request.GET.get('meeting')
+    session_attended = session_attended_options.objects.get(session_attended=meeting)
     date = request.GET.get('date')
     date = datetime.strptime(date, "%Y-%m-%d")
     date = date.strftime("%d %B %Y")
@@ -232,6 +246,19 @@ def group_addPersonForm(request):
         'group_options': group_options,
     }
     return render(request, 'groups/addPerson.html', context)
+
+@login_required()
+def check_person_exists(request):
+    name = request.GET.get('Name')
+    surname = request.GET.get('Surname')
+    if len(name) > 1 and len(surname) > 1:
+       exists = People.objects.filter(Name=name, Surname=surname).exists()
+       person = People.objects.get(Name=name, Surname=surname)
+       print(person.id)
+       return render(request, 'test.html')
+
+    
+
 
 @login_required    
 def addPerson_Parent(request, pk):
@@ -333,7 +360,8 @@ def isguardian_entered(request):
 
 @login_required    
 def present_bysession(request):
-    form = present_select_fieldsForm()
+    group_leader_id = request.user.id
+    form = present_select_fieldsForm(group_leader_id)
     context= {
         'form': form,
     }
@@ -714,4 +742,3 @@ def group_absentee_view_feedback(request, pk):
     }
 
     return render(request, 'groups/group_absentee_view_feedback.html', context)
-
