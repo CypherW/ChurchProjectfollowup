@@ -6,7 +6,7 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% load static %}
-
+<div id="modal-here"></div>
 <div id="modals-here"
     class="modal modal-blur fade"
     style="display: none"
@@ -52,19 +52,6 @@
             </div>
         </div>
     </div>
-    <div id="popup-container"></div>
 
-    
-
-<script>
-document.addEventListener('htmx:afterRequest', function(event) {
-    if (event.detail.xhr.response.exists) {
-        const personId = event.detail.xhr.response.person_id;
-        if (confirm('This person already exists. Is it the same person?')) {
-            window.location.href = `/person/${personId}/`;
-        }
-    }
-});
-</script>
 </div>
 {% endblock %}

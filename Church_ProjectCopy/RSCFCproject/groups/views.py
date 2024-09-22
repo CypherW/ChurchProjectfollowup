@@ -249,13 +249,34 @@ def group_addPersonForm(request):
 
 @login_required()
 def check_person_exists(request):
+    if request.method=='POST':
+        checks = request.POST.getlist('checks[]')
+        person_id = request.POST.get('person')
+        for check in checks:
+                newMember = People.objects.get(pk=person_id)
+                groupAddedto = session_attended_options.objects.get(pk=check)
+                exists = group_membership.objects.filter(member=newMember, group=groupAddedto).exists()
+                print(exists)
+                if exists == False:
+                    group_membership_instance = group_membership(member=newMember)
+                    group_membership_instance.group = groupAddedto
+                    group_membership_instance.active = True
+                    group_membership_instance.save()
+        return redirect('/groups')
+
     name = request.GET.get('Name')
+    exists = False
     surname = request.GET.get('Surname')
     if len(name) > 1 and len(surname) > 1:
        exists = People.objects.filter(Name=name, Surname=surname).exists()
-       person = People.objects.get(Name=name, Surname=surname)
+       if exists == True:
+        person = People.objects.get(Name=name, Surname=surname)
        print(person.id)
-       return render(request, 'test.html')
+    context = {
+          'exists': exists,
+          'person': person,
+       }
+    return render(request, 'groups/check_person_exists_modal.html', context)
 
     
 

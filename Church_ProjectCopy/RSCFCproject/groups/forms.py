@@ -11,10 +11,10 @@ class Person_Form(forms.ModelForm):
         fields = ['Name', 'Surname', 'CellNumber', 'EmailAddress', 'birthday', 'area', 'Gender']
 
         widgets = {
-            'Name': forms.TextInput (attrs={'hx-get': 'check_person_exists', 'hx-target': '#popup-container', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Surname'}),
-            'Surname': forms.TextInput (attrs= {'hx-get': 'check_person_exists', 'hx-target': '#popup-container', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Name'}),
+            'Name': forms.TextInput (attrs={'hx-get': 'check_person_exists', 'hx-target': '#modal-here', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Surname'}),
+            'Surname': forms.TextInput (attrs= {'hx-get': 'check_person_exists', 'hx-target': '#modal-here', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Name'}),
         }
-
+        
     """ hx-target="#validation-result" hx-include="#surname">
     <input type="text" name="surname" id="surname" hx-get="{% url 'validate_name_surname' %}" hx-trigger="change" hx-target="#validation-result" hx-include="#name">"""
 
