@@ -9,20 +9,25 @@
 
 <div class="col-md-6 offset-md-3 p-3">
   <div class="card-header bg-info text-white id={{date}}">
-    <h4> Followup Form: </h4>
+    <h5> <b>Followup: {{ followup_convert_new.convert.Name }} {{ followup_convert_new.convert.Surname }}</h5>
   </div>
-  <div class="card shadow text-center p-3">
-  <div class="container d-flex justify-content-center">
-    <h5>{{ new_convert }} {{ new_convert.new_convert.Surname }}: {{ new_convert.new_convert.CellNumber }}</h5>
-  </div>
-  <div class="container d-flex justify-content-center">
+  <div class="card shadow p-3">
+  <div class="container mt-2">
+    <p><h6><b>Phone number:</b> <a href="tel:{{ followup_convert_new.convert.CellNumber}}">{{ followup_convert_new.convert.CellNumber }}</a></h6></p>
+    <p><h6><b>Email Address:</b> <a href="mailto:{{ followup_convert_new.convert.EmailAddress }}">{{ followup_convert_new.convert.EmailAddress }}</a> </h6></p>
+    <p><h6><b>Date of Decission:</b> {{ followup_convert_new.dateofcommitment|date:"d F Y" }}</h6></p>
+    <p><h6><b>Contact Preference:</b> {{ followup_convert_new.contactMethod }}</h6></p>
+    <p><h6><b>Decission:</b> {{ followup_convert_new.decissionType }}</h6></p>
+    
+    </div>
+  <div class="container mt-3">
   <form method="POST">
     {% csrf_token %}
-    {{ form }}
+    {{ form|crispy }}
 
-  <div class="mt-2" id="buttons">
-  <a class="btn btn-danger btn-sm" href="{% url 'group_absent_followup' %}">Cancel</a>
-  <input class="btn btn-primary bg-info btn-sm" type="submit" value="Submit">
+  <div class="mt-2 d-flex justify-content-md-center" id="buttons">
+  <a class="btn btn-danger btn-sm m-2" href="{% url 'new_convert_followup' %}">Cancel</a>
+  <input class="btn btn-primary bg-info btn-sm m-2" type="submit" value="Submit">
   </div>
   </form>
   </div>

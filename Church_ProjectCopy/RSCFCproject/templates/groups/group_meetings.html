@@ -56,7 +56,12 @@
           {% for meeting in meetings %}
             <div class="col-md-4 p-3">
                   <div class="card-header bg-info text-white id={{meeting.dateofvisit|date:'d F Y'}}">
-                    {{meeting.dateofvisit|date:"d F Y"}} {{ meeting.session_attended}}
+                    <div class="container">
+                    <div class="row d-flex inline">
+                    <div class="col text-nowrap text-left">{{ meeting.session_attended}}:</div>
+                    <div class="col text-nowrap text-right">{{meeting.dateofvisit|date:"d F Y"}}</div>
+                     </div>
+                     </div>
                   </div>
                   <div class="card my-card shadow text-center p-3" hx-get="{% url 'load_event_date_attendance' %}" hx-trigger="load"
                   hx-include="#id_session_attended_options" hx-vals='{"myVariable": "{{ meeting.dateofvisit|date:"d F Y" }}", "session_id": "{{ meeting.session_attended.id}}"}'

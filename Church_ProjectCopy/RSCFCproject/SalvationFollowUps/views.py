@@ -47,11 +47,11 @@ def new_convert_followup(request):
 
 @login_required
 def new_Convert_feedback(request, pk):
-    new_convert = salvations.objects.get(id=pk)
-    print(new_convert)
+    followup_convert_new = salvations.objects.get(id=pk)
+    print(followup_convert_new)
 
     context = { 
-        'new_convert': new_convert,
+        'followup_convert_new': followup_convert_new,
     }
     return render(request, 'SalvationFollowUps/new_Convert_feedback.html', context)
 

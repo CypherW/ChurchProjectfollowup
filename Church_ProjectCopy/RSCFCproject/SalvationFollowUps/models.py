@@ -25,6 +25,9 @@ class salvations(models.Model):
     class Meta:
         verbose_name_plural = 'Salvations'
 
+    def __str__(self):
+        return f'{self.convert} {self.dateofcommitment} {self.contactMethod} {self.decissionType}'
+
 
 ##### OLD MODELS - NEED TO BE REMOVED
 LANGUAGE = (

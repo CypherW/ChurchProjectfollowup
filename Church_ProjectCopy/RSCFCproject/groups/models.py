@@ -80,7 +80,7 @@ class group_membership(models.Model):
 
 class prayer_cell_feedback(models.Model):
     date_of_meeting = models.DateField(verbose_name= 'Date of meeting:')
-    disciple_leader = models.ForeignKey(People, models.CASCADE, null=False)
+    disciple_leader = models.ForeignKey(User, models.CASCADE, null=False)
     word_discussed = models.TextField(verbose_name= 'Word Discussed:')
     prayed_about = models.TextField(verbose_name='Prayed About:')
     testimonies = models.TextField(verbose_name='Testimonies:', null=True, blank=True)
