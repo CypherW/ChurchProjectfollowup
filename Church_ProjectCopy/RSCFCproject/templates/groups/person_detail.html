@@ -21,7 +21,7 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-8">
-                <span class="h4"> {{ person.Name }} {{person.Surname}}</span>
+                <span class="h4 m-2"> {{ person.Name }} {{person.Surname}}</span> <a button class ="btn btn-primary bg-info header1  btn-sm m-2" href="{% url 'edit_person_details' person.id %}">Edit</a>
                 <hr>
                 <table class="table bg-white table-borderless">
                   <tbody>

@@ -4,6 +4,20 @@ from .models import session_attendance, session_attended_options, prayer_cell_fe
 from datetime import date
 from django.utils import timezone
 
+class CustomDateInput(forms.DateInput):
+    input_type = 'text'
+    format = '%d %B %Y'
+
+    def __init__(self, *args, **kwargs):
+        kwargs['format'] = self.format
+        super().__init__(*args, **kwargs)
+
+    def format_value(self, value):
+        if value:
+            return value.strftime(self.format)
+        return super().format_value(value)
+
+
 
 class Person_Form(forms.ModelForm):
     class Meta:
@@ -13,11 +27,9 @@ class Person_Form(forms.ModelForm):
         widgets = {
             'Name': forms.TextInput (attrs={'hx-get': 'check_person_exists', 'hx-target': '#modal-here', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Surname'}),
             'Surname': forms.TextInput (attrs= {'hx-get': 'check_person_exists', 'hx-target': '#modal-here', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Name'}),
+            'birthday': forms.DateInput(format='%d %B %Y'),
         }
-        
-    """ hx-target="#validation-result" hx-include="#surname">
-    <input type="text" name="surname" id="surname" hx-get="{% url 'validate_name_surname' %}" hx-trigger="change" hx-target="#validation-result" hx-include="#name">"""
-
+   
 class Date_Attended_Form(forms.ModelForm):
 
     def __init__(self, group_leader_id, *args, **kwargs):

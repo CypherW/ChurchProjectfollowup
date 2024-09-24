@@ -1,3 +1,7 @@
+<div class="col-md-11"></div>
+ <div class="" id="meeting_listings">
+    
+
 {% if groupFeedback  == 'No feedback provided' %}
 <div class="card my-card shadow text-center p-3">
 <ul class="list_group list-group-flush">
@@ -6,7 +10,7 @@
     <li class="list-group-item text-start"><b>{{groupFeedback }}</b></li>    
                     </ul>
                     <button id="feedback_button" class="btn bg-warning" hx-get="{% url 'noFeedback_button' %}" hx-include="#id_session_attended_options" 
-                    hx-vals='{"eventDate": "{{ date }}"}', hx-target="#emailSent{{ id_add }}">Request Feedback</button> 
+                    hx-vals='{"eventDate": "{{ date }}", "session_id": "{{ session_id }}"}', hx-target="#emailSent{{ id_add }}">Request Feedback</button> 
                     <div id="emailSent{{ id_add }}"></div>   
                       </div>
                       
@@ -22,7 +26,7 @@
                     hx-get="{% url 'display_event_feedback_modal' %}"
                     hx-target="#modals-here"
                     hx-trigger="click"
-                    hx-include="#id_session_attended_options" hx-vals='{"eventDate": "{{ date }}"}'
+                    hx-include="#id_session_attended_options" hx-vals='{"eventDate": "{{ date }}", "session_id": "{{ session_id }}"}'
                     data-bs-toggle="modal"
                     data-bs-target="#modals-here"
                     class="btn bg-info">View Feedback</button>    

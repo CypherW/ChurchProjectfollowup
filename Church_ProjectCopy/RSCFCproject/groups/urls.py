@@ -5,6 +5,7 @@ urlpatterns = [
     path('groups/', views.group_attendance, name='group_attendance'),
     path('groups/update_attending_count', views.update_attending_count, name='update_attending_count'),
     path('groups/person/<int:pk>', views.group_person_detail, name='group_person_detail' ),
+    path('groups/edit/<int:pk>', views.edit_person_details, name='edit_person_details' ),
     path('groups/addPerson', views.group_addPersonForm, name='addPersonForm' ),
     path('groups/check_person_exists', views.check_person_exists, name='check_person_exists' ),
     path('groups/present', views.present_bysession, name='present_bysession'),

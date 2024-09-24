@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.db.models import Count
+from django.db.models import Count, Q
 from SalvationFollowUps.models import Converts
 from visitors.models import visit_date
 from people.models import People, guardianRelation
@@ -157,7 +157,6 @@ def prayer_cell_feedback_form(request):
                 meeting_date = request.GET.get('date')
                 meeting = request.GET.get('meeting')
                 meeting_hosted_id = session_attended.id
-                print(meeting_hosted_id)
                 duplicate_form = prayer_cell_feedback.objects.get(date_of_meeting=meeting_date, meeting_hosted=meeting_hosted_id)
                 return render(request, 'groups/feedback_form_already_submitted.html', {
                     'form': form,
@@ -208,6 +207,23 @@ def group_person_detail(request, pk):
     }
     return render(request, 'groups/person_detail.html', context)
 
+@login_required()
+def edit_person_details(request, pk):
+    person = People.objects.get(id=pk)
+    if request.method=='POST':
+        edit_form = Person_Form(request.POST, instance=person)
+        if edit_form.is_valid():
+            edit_form.save()
+            redirect_url = f'/groups/person/{person.id}'
+            return redirect(redirect_url)
+    else:
+        edit_form = Person_Form(instance=person)
+    context = {
+        'edit_form': edit_form,
+        'person': person,
+    }
+    return render(request, 'groups/editPerson_details.html', context)
+
 @login_required    
 def group_addPersonForm(request):
     if request.method=='POST':
@@ -256,7 +272,6 @@ def check_person_exists(request):
                 newMember = People.objects.get(pk=person_id)
                 groupAddedto = session_attended_options.objects.get(pk=check)
                 exists = group_membership.objects.filter(member=newMember, group=groupAddedto).exists()
-                print(exists)
                 if exists == False:
                     group_membership_instance = group_membership(member=newMember)
                     group_membership_instance.group = groupAddedto
@@ -271,7 +286,6 @@ def check_person_exists(request):
        exists = People.objects.filter(Name=name, Surname=surname).exists()
        if exists == True:
         person = People.objects.get(Name=name, Surname=surname)
-       print(person.id)
     context = {
           'exists': exists,
           'person': person,
@@ -393,13 +407,16 @@ def present_bysession(request):
 def meeting_occurrences(request):
     session = session_attendance.objects.all()
     eventFilter = group_meetingsFilter(request.GET, queryset=session)
+    meetings_last_thirty_days = session_attendance.objects.filter(dateofvisit__gte=timezone.now() - timezone.timedelta(days=30)).distinct('dateofvisit', 'session_attended')
+    meetings_last_thirty_days = meetings_last_thirty_days.order_by('-dateofvisit')
+    meetings_last_thirty_days = [meetings_last_thirty_days[i:i + 3] for i in range(0, len(meetings_last_thirty_days), 3)]
     form = group_type_select()
-    unique_dates = session.values("dateofvisit").distinct()
 
     context= {
         'eventFilter': eventFilter,
         'session': session,
-        'form': form
+        'form': form,
+        'meetings_last_thirty_days': meetings_last_thirty_days,
         
     }
 
@@ -479,17 +496,8 @@ def load_event_dates(request):
     dates = session_attendance.objects.filter(session_attended=event_type).order_by('dateofvisit').distinct('dateofvisit')
     dates = [session.dateofvisit.strftime('%d %B %Y') for session in dates]
     dates.reverse()
-    dates = [dates[i:i + 3] for i in range(0, len(dates), 3)]
-    countlist = []
-    for datelist in dates:
-        for date in datelist:
-            date = datetime.strptime(date, '%d %B %Y')
-            date = date.strftime('%Y-%m-%d')
-            count_test = session_attendance.objects.filter(dateofvisit=date, session_attended=event_type) 
-            count_instances = count_test.count()
-            countlist.append(count_instances)
-    
-        
+    dates = [dates[i:i + 3] for i in range(0, len(dates), 3)]    
+    print('load_event_dates')
     context = {
         'dates': dates,
     }
@@ -499,6 +507,8 @@ def load_event_dates(request):
 def load_event_date_attendance(request):
     date = request.GET.get('myVariable')
     session_id = request.GET.get('session_attended_options')
+    if session_id == '':
+        session_id = request.GET.get('session_id')
     formatted_date = datetime.strptime(date, "%d %B %Y")
     attendee_list = session_attendance.objects.filter(dateofvisit=formatted_date, session_attended=session_id)
     count = attendee_list.count()
@@ -513,14 +523,15 @@ def load_event_date_attendance(request):
         groupFeedback = groupFeedback.word_discussed
     except:
         groupFeedback = 'No feedback provided'
-
+    
     context = {
         'count': count,
         'absent': absent,
         'groupFeedback': groupFeedback,
         'date': date,
         'id_add': id_add,
-        }
+        'session_id': session_id,
+                        }
     
     return render(request, "groups/load_event_date_attendance.html", context)
 
@@ -528,10 +539,11 @@ def load_event_date_attendance(request):
 def noFeedback_button(request):
     date = request.GET.get('eventDate')
     session_id = request.GET.get('session_attended_options')
+    if session_id == '':
+        session_id = request.GET.get('session_id')
     meetingName = session_attended_options.objects.get(id=session_id)
     leader = User.objects.get(pk=meetingName.group_leader_id)
     requester = request.user.username
-    #requester = requester.username
     leaderEmail = leader.email
     send_mail("FEEDBACK FOR MEETING",
 f"""Dear {leader}, 
@@ -540,7 +552,7 @@ You had a meeting on {date} but did not submit feedback. Please could you submit
      
 Kind Regards,
 
-{requester}
+Pastor {requester}
        
          """,
     "shodandevstesting@gmail.com",
@@ -553,6 +565,9 @@ Kind Regards,
 def display_event_feedback_modal(request):
     date = request.GET.get('eventDate')
     session_id = request.GET.get('session_attended_options')
+    if session_id == '':
+        session_id = request.GET.get('session_id')
+        print('blank')
     formatted_date = datetime.strptime(date, "%d %B %Y")
     session = session_attended_options.objects.get(id=session_id)
     feedback = prayer_cell_feedback.objects.get(date_of_meeting=formatted_date, meeting_hosted=session_id)
@@ -725,7 +740,6 @@ def group_remove_member(request, pk):
         membership_obj.active = False
         membership_obj.save()
         meeting_missed_obj = session_absent.objects.get(id=pk)
-        print(meeting_missed_obj)
         meeting_missed_obj.follow_up_Feedback = "Has left group: " + reason
         meeting_missed_obj.save()
 
