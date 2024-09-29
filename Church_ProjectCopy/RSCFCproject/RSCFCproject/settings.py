@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_htmx',
     'groups',
     'people',
+    'services',
 ]
 
 MIDDLEWARE = [

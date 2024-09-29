@@ -1,0 +1,38 @@
+{% extends 'partials/groups_base.html' %}
+{% block title %} Service Counts {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<div class="col-md-6 offset-md-3 p-3">
+  <div class="card-header bg-info text-white">
+    <h5> Service Counts: </h5>
+  </div>
+  <div class="card shadow p-3">
+  <div class="container">
+    <br>
+    
+    <form method="POST">
+      {% csrf_token %}
+      {{ form|crispy }}
+      
+      <div class="d-flex justify-content-center mt-5">
+        <input class="btn btn-prinary bg-info btn-sm" type="submit" value="Submit">
+        </div>
+        {% if messages %}
+            {% for message in messages %}
+            {% if message.tags %} <div class="text-success {{ message.tags }} m-2 col-md-4" {% endif %}>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        </div>
+        </div>
+
+          </div>
+    </form>
+  </div>
+  
+
+{% endblock %}

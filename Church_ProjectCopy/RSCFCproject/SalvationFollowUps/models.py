@@ -16,6 +16,29 @@ decission = (
     ('Rededication', 'Rededication'),
 )
 
+preferred_language = (
+    ('African', 'African'),
+    ('Afrikaans', 'Afrikaans'),
+    ('English', 'English'),
+
+)
+
+attending_church = (
+    ('Yes', 'Yes'),
+    ('No', 'No'),
+)
+
+first_contact_method = (
+    ('Whatsapp', 'Whatsapp'),
+    ('Email', 'Email'),
+)
+
+add_to_whatsapp_group = (
+    ('Yes', 'Yes'),
+    ('No', 'No'),
+)
+
+
 class salvations(models.Model):
     convert = models.ForeignKey(People, models.CASCADE, null=True)
     dateofcommitment = models.DateField(default=timezone.now, verbose_name = 'Date:')
@@ -27,6 +50,33 @@ class salvations(models.Model):
 
     def __str__(self):
         return f'{self.convert} {self.dateofcommitment} {self.contactMethod} {self.decissionType}'
+    
+class new_convert_first_followup(models.Model):
+    convert = models.ForeignKey(salvations, models.CASCADE, null=False)
+    method_of_followup = models.CharField(max_length=20, choices=first_contact_method, null=False, blank=False, default='Unspecified')
+    response = models.TextField(verbose_name='Response:', null=True, blank=True)
+    added_to_Whatsapp_group = models.CharField(max_length=5, choices=add_to_whatsapp_group, null=False, blank=False, default="Unspecified")
+    followedup_up_by = models.ForeignKey(User, models.CASCADE, null=False)
+    date_of_followup = models.DateField(default=timezone.now, verbose_name = 'Date:')
+
+    class Meta:
+        verbose_name_plural = 'New Convert First Follow up'
+
+    def __str__(self):
+        return f'{self.convert} {self.method_of_followup} {self.response} {self.added_to_Whatsapp_group} {self.followedup_up_by} {self.date_of_followup}'
+
+class new_convert_followup_call(models.Model):
+    convert = models.ForeignKey(salvations, models.CASCADE, null=False)
+    general_feedback = models.TextField(verbose_name='Feedback:', null=False, blank=False)
+    prayer_request = models.TextField(verbose_name='Prayer Request', null=True, blank=True)
+    date_of_followup = models.DateField(default=timezone.now, verbose_name = 'Date:')
+    followedup_up_by = models.ForeignKey(User, models.CASCADE, null=False)
+
+    class Meta:
+        verbose_name_plural = 'New Convert Follow up'
+
+    def __str__(self):
+        return f'{self.convert} {self.general_feedback} {self.prayer_request} {self.date_of_followup} {self.followedup_up_by}'
 
 
 ##### OLD MODELS - NEED TO BE REMOVED

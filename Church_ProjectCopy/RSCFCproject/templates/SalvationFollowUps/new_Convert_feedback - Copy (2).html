@@ -18,28 +18,30 @@
     <p><h6><b>Date of Decission:</b> {{ followup_convert_new.dateofcommitment|date:"d F Y" }}</h6></p>
     <p><h6><b>Contact Preference:</b> {{ followup_convert_new.contactMethod }}</h6></p>
     <p><h6><b>Decission:</b> {{ followup_convert_new.decissionType }}</h6></p>
+    <p><h6><b>Language Preference:</b> {{ followup_convert_new.preferred_language }}</h6></p>
     <p><h6><b>Area:</b> {{ followup_convert_new.convert.area }}</h6></p>
     
     </div>
-    <div class="" id="form1">
   <div class="container mt-3">
   <form method="POST">
     {% csrf_token %}
     {{ form|crispy }}
   <div class="mt-2 d-flex justify-content-md-center" id="buttons">
-  <a class="btn btn-danger btn-med m-2" href="{% url 'new_convert_followup' %}">Cancel</a>
-  <input class="btn btn-primary bg-info btn-med m-2" type="submit" value="Submit">
+  <a class="btn btn-danger btn-sm m-2" href="{% url 'new_convert_followup' %}">Cancel</a>
+  <input class="btn btn-primary bg-info btn-sm m-2" type="submit" value="Submit">
   </div>
   </form>
   </div>
   <span class="border">
   <nav aria-label="...">
     <ul class="pagination pagination-sm m-2">
-      <li class="page-item disabled">
+      <li class="page-item">
         <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
       </li>
-      <li class="page-item active"><a class="page-link" href="#">1</a></li>
-      <li class="page-item" hx-get="new_Convert_feedback_call" hx-target="#form1" hx-vals='{"myVal": {{followup_convert_new.id}} }'><a class="page-link">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item active" aria-current="page">
+        <a class="page-link" href="#">2</a>
+      </li>
       <li class="page-item"><a class="page-link" href="#">3</a></li>
       <li class="page-item">
         <a class="page-link" href="#">Next</a>
@@ -47,7 +49,6 @@
     </ul>
   </nav>
 </span>
-</div>
 </div>
 </div>
 
