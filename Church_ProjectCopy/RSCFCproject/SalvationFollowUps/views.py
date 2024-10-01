@@ -2,8 +2,8 @@ import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import salvations, Converts, Followups, Requests_Feedback, Link_Church, ATTENDCHURCH, Followed_Up_by, new_convert_first_followup, new_convert_followup_call
-from .forms import ConvertsForm, PrayerRequestForm, FollowupForm, LinkchurchForm, convertForm, new_convert_First_FollowupForm, new_convert_Followup_call_Form
+from .models import salvations, Converts, Followups, Requests_Feedback, Link_Church, ATTENDCHURCH, Followed_Up_by, new_convert_first_followup, new_convert_followup_call, new_convert_referral_finalize
+from .forms import ConvertsForm, PrayerRequestForm, FollowupForm, LinkchurchForm, convertForm, new_convert_First_FollowupForm, new_convert_Followup_call_Form, new_convert_referral_finalize_form
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .filters import ConvertsFilter
@@ -47,7 +47,6 @@ def new_convert_followup(request):
 
 @login_required
 def new_Convert_feedback(request, pk):
-    print(pk)
     followup_convert_new = salvations.objects.get(id=pk)
     try:
         submitted_feedback = new_convert_first_followup.objects.get(convert=pk)
@@ -83,34 +82,58 @@ def new_Convert_feedback_call(request):
     convert = request.GET.get('myVal')
     try:
         submitted_feedback = new_convert_followup_call.objects.get(convert=convert)
-        print('submitted')
     except:
         submitted_feedback = False
     if request.method=='POST':
-        print('post'+ str(submitted_feedback))
-        if submitted_feedback == False:
+        submitted_feedback = request.POST.get('submitted_feedback')
+        convert = request.POST.get('convert')
+        if submitted_feedback == '':
             form = new_convert_Followup_call_Form(request.POST)
         else:
+            submitted_feedback = new_convert_followup_call.objects.get(id=submitted_feedback)
             form = new_convert_Followup_call_Form(request.POST, instance=submitted_feedback)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.followedup_up_by = request.user
-            instance.convert = salvations.objects.get(id='2')
+            instance.convert = salvations.objects.get(id=convert)
             instance.save()
             return redirect('new_convert_followup')
     else:
         if submitted_feedback == False:
             form = new_convert_Followup_call_Form()
         else:
-            print("submitted_feedback id")
-            print(submitted_feedback.id)
             form = new_convert_Followup_call_Form(instance=submitted_feedback)
 
     context = {
         'form': form,
         'convert': convert,
+        'submitted_feedback': submitted_feedback,
     }
     return render(request, 'SalvationFollowUps/new_Convert_feedback_call.html', context)
+
+@login_required()
+def new_convert_referral_finalize(request):
+    convert = request.GET.get('myVal')
+    if request.method=='POST':
+        submitted_feedback = request.POST.get('submitted_feedback')
+        convert = request.POST.get('convert')
+        if submitted_feedback == '':
+            form = new_convert_Followup_call_Form(request.POST)
+        else:
+            submitted_feedback = new_convert_followup_call.objects.get(id=submitted_feedback)
+            form = new_convert_Followup_call_Form(request.POST, instance=submitted_feedback)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.followedup_up_by = request.user
+            instance.convert = salvations.objects.get(id=convert)
+            instance.save()
+            return redirect('new_convert_followup')
+    form = new_convert_referral_finalize_form()
+    context = {
+        'convert': convert,
+        'form': form,
+    }
+    return render(request, 'SalvationFollowups/new_Convert_feedback_refer_finalize.html', context)
 
 ##### OLD VIEWS NEED TO BE REMOVED
 @login_required

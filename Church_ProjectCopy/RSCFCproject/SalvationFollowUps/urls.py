@@ -7,6 +7,7 @@ urlpatterns = [
     path('salvations/new_convert_followup', views.new_convert_followup, name='new_convert_followup'),
     path('salvations/new_Convert_feedback/<int:pk>', views.new_Convert_feedback, name='new_Convert_feedback'),
     path('salvations/new_Convert_feedback/new_Convert_feedback_call/', views.new_Convert_feedback_call, name='new_Convert_feedback_call'),
+    path('salvations/new_Convert_feedback/new_convert_referral_finalize/', views.new_convert_referral_finalize, name='new_convert_referral_finalize'),
 
     #### OLD URLS NEED TO BE REMOVED
     path('dashboard/', views.index, name='dashboard-index'),

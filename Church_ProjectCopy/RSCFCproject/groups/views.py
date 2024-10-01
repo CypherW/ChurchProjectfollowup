@@ -280,8 +280,9 @@ def check_person_exists(request):
         return redirect('/groups')
 
     name = request.GET.get('Name')
+    name = name.strip()
     exists = False
-    surname = request.GET.get('Surname')
+    surname = request.GET.get('Surname').strip()
     if len(name) > 1 and len(surname) > 1:
        exists = People.objects.filter(Name=name, Surname=surname).exists()
        if exists == True:

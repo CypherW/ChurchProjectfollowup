@@ -2,8 +2,7 @@
   
   <div class="" id="form1">
       <div class="container mt-3">
-      <form action="{% url 'new_Convert_feedback_call' %}" method="POST">
-        <input hidden value="{{submitted_feedback.id}}" id="submitted_feedback" name="submitted_feedback">
+      <form action="{% url 'new_convert_referral_finalize' %}" method="POST">
         <input hidden value="{{convert}}" id="convert" name="convert">
 
         {% csrf_token %}
@@ -24,7 +23,7 @@
           <li class="page-item" aria-current="page">
             <a class="page-link active" href="#">2</a>
           </li>
-          <li class="page-item"  hx-get="new_convert_referral_finalize" hx-target="#form1" hx-vals='{"myVal": {{convert}} }'><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
           <li class="page-item">
             <a class="page-link" href="#">Next</a>
           </li>
