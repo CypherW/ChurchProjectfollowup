@@ -49,20 +49,29 @@ def service_countspage(request):
 @login_required
 def stats(request):
     def get_previous_sunday(weeks_ago=0):
-        today = timezone.now()
+        today = timezone.localtime()
         if today.strftime('%A') == 'Sunday':
             previous_sunday = today.date()
+            print('today')
+            print(previous_sunday)
         else:
             offset = (today.weekday() + 1) % 7
             previous_sunday = today - timezone.timedelta(days=offset)
+            print('error')
         return previous_sunday - timezone.timedelta(weeks=weeks_ago)
 
     def get_next_saturday(sunday_date):
         next_saturday = sunday_date + timezone.timedelta(days=6)
         return next_saturday
+    
+    today = timezone.localtime()
+    print("Current date and time:", today)
+    print("Day of the week:", today.strftime('%A'))
+
 
     # Get the most recent Sunday and the following Saturday
     most_recent_sunday = get_previous_sunday()
+    print(most_recent_sunday)
     most_recent_saturday = get_next_saturday(most_recent_sunday)
 
     # Get the Sunday and Saturday from one week ago
@@ -78,14 +87,14 @@ def stats(request):
     three_weeks_ago_saturday = get_next_saturday(three_weeks_ago_sunday)
 
     # Print the results
-    print("Most recent Sunday:", most_recent_sunday)
+    """ print("Most recent Sunday:", most_recent_sunday)
     print("Most recent Saturday:", most_recent_saturday)
     print("One week ago Sunday:", one_week_ago_sunday)
     print("One week ago Saturday:", one_week_ago_saturday)
     print("Two weeks ago Sunday:", two_weeks_ago_sunday)
     print("Two weeks ago Saturday:", two_weeks_ago_saturday)
     print("Three weeks ago Sunday:", three_weeks_ago_sunday)
-    print("Three weeks ago Saturday:", three_weeks_ago_saturday)
+    print("Three weeks ago Saturday:", three_weeks_ago_saturday)"""
     
     try:
         sunday_counts = service_counts.objects.get(service_date=most_recent_sunday)
