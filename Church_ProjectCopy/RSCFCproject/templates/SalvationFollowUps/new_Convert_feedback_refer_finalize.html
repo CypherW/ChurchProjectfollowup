@@ -4,6 +4,7 @@
       <div class="container mt-3">
       <form action="{% url 'new_convert_referral_finalize' %}" method="POST">
         <input hidden value="{{convert}}" id="convert" name="convert">
+        <input hidden value="{{submitted_feedback}}" id="submitted_feedback" name="submitted_feedback">
 
         {% csrf_token %}
         {{ form|crispy }}

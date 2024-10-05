@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import service_counts
 from groups.models import session_attendance
+from SalvationFollowUps.models import salvations
 from django.contrib.auth.models import User
 from .forms import service_count_form
 from django.utils import timezone
@@ -47,40 +48,79 @@ def service_countspage(request):
 
 @login_required
 def stats(request):
-    def get_previous_sunday(): # Determine if today is a Sunday. If not get previous Sunday's day else use today's date.
+    def get_previous_sunday(weeks_ago=0):
         today = timezone.now()
         if today.strftime('%A') == 'Sunday':
-            return today.date()
+            previous_sunday = today.date()
         else:
             offset = (today.weekday() + 1) % 7
             previous_sunday = today - timezone.timedelta(days=offset)
-            return previous_sunday.date()
-    
-    def get_next_saturday(sunday_date):  # Determine when the next Saturday will be from above determined Sunday.
+        return previous_sunday - timezone.timedelta(weeks=weeks_ago)
+
+    def get_next_saturday(sunday_date):
         next_saturday = sunday_date + timezone.timedelta(days=6)
         return next_saturday
 
-    
-    Sunday = get_previous_sunday()
-    Saturday = get_next_saturday(Sunday)
+    # Get the most recent Sunday and the following Saturday
+    most_recent_sunday = get_previous_sunday()
+    most_recent_saturday = get_next_saturday(most_recent_sunday)
+
+    # Get the Sunday and Saturday from one week ago
+    one_week_ago_sunday = get_previous_sunday(weeks_ago=1)
+    one_week_ago_saturday = get_next_saturday(one_week_ago_sunday)
+
+    # Get the Sunday and Saturday from two weeks ago
+    two_weeks_ago_sunday = get_previous_sunday(weeks_ago=2)
+    two_weeks_ago_saturday = get_next_saturday(two_weeks_ago_sunday)
+
+    # Get the Sunday and Saturday from three weeks ago
+    three_weeks_ago_sunday = get_previous_sunday(weeks_ago=3)
+    three_weeks_ago_saturday = get_next_saturday(three_weeks_ago_sunday)
+
+    # Print the results
+    print("Most recent Sunday:", most_recent_sunday)
+    print("Most recent Saturday:", most_recent_saturday)
+    print("One week ago Sunday:", one_week_ago_sunday)
+    print("One week ago Saturday:", one_week_ago_saturday)
+    print("Two weeks ago Sunday:", two_weeks_ago_sunday)
+    print("Two weeks ago Saturday:", two_weeks_ago_saturday)
+    print("Three weeks ago Sunday:", three_weeks_ago_sunday)
+    print("Three weeks ago Saturday:", three_weeks_ago_saturday)
     
     try:
-        sunday_counts = service_counts.objects.get(service_date=Sunday)
+        sunday_counts = service_counts.objects.get(service_date=most_recent_sunday)
         first_service = sunday_counts.first_service_count
         second_service = sunday_counts.second_service_count
+        
         
     except:
         first_service = 0
         second_service = 0
-        
+
     sunday_total = first_service + second_service
-    group_attendance_total = session_attendance.objects.filter(dateofvisit__gte=Sunday, dateofvisit__lte=Saturday).count
-    group_attendance_total_unique = session_attendance.objects.filter(dateofvisit__gte=Sunday, dateofvisit__lte=Saturday).distinct('attendee_id').count
+    try:
+        previous_Sunday_counts = service_counts.objects.get(service_date=one_week_ago_sunday)
+        previous_first_service = previous_Sunday_counts.first_service_count
+        previous_second_service = previous_Sunday_counts.second_service_count
 
+    except:
+        previous_first_service = 0
+        previous_second_service = 0
+        
+    previous_sunday_total = previous_first_service + previous_second_service
 
-    sunday_date_format = Sunday.strftime('%d %B %Y')
-    saturday_date_format = Saturday.strftime('%d %B %Y')
+    group_attendance_total = session_attendance.objects.filter(dateofvisit__gte=most_recent_sunday, dateofvisit__lte=most_recent_saturday).count
+    group_attendance_total_unique = session_attendance.objects.filter(dateofvisit__gte=most_recent_sunday, dateofvisit__lte=most_recent_saturday).distinct('attendee_id').count
+    salvations_count = salvations.objects.filter(dateofcommitment__gte=most_recent_sunday, dateofcommitment__lte=most_recent_saturday).count
 
+    previous_group_attendance_total = session_attendance.objects.filter(dateofvisit__gte=one_week_ago_sunday, dateofvisit__lte=one_week_ago_saturday).count
+    previous_group_attendance_total_unique = session_attendance.objects.filter(dateofvisit__gte=one_week_ago_sunday, dateofvisit__lte=one_week_ago_saturday).distinct('attendee_id').count
+    previous_salvations_count = salvations.objects.filter(dateofcommitment__gte=one_week_ago_sunday, dateofcommitment__lte=one_week_ago_saturday).count
+
+    sunday_date_format = most_recent_sunday.strftime('%d %B %Y')
+    saturday_date_format = most_recent_saturday.strftime('%d %B %Y')
+    previous_sunday_date_format = one_week_ago_sunday.strftime('%d %B %Y')
+    previous_saturday_date_format = one_week_ago_saturday.strftime('%d %B %Y')
 
     
 
@@ -92,5 +132,15 @@ def stats(request):
         'saturday_date_format': saturday_date_format,
         'group_attendance_total': group_attendance_total,
         'group_attendance_total_unique': group_attendance_total_unique,
+        'previous_first_service': previous_first_service,
+        'previous_second_service': previous_second_service,
+        'previous_sunday_date_format': previous_sunday_date_format,
+        'previous_saturday_date_format': previous_saturday_date_format,
+        'previous_sunday_total': previous_sunday_total,
+        'previous_group_attendance_total': previous_group_attendance_total,
+        'previous_group_attendance_total_unique': previous_group_attendance_total_unique,
+        'salvations_count': salvations_count,
+        'previous_salvations_count': previous_salvations_count,
+
     }
     return render(request, 'services/stats.html', context)

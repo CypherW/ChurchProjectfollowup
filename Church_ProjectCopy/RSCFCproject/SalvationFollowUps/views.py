@@ -111,27 +111,37 @@ def new_Convert_feedback_call(request):
     }
     return render(request, 'SalvationFollowUps/new_Convert_feedback_call.html', context)
 
+
 @login_required()
-def new_convert_referral_finalize(request):
+def new_convert_referral_finalize_view(request):
     convert = request.GET.get('myVal')
+    try:
+        submitted_feedback = new_convert_referral_finalize.objects.get(convert=convert)
+    except:
+        submitted_feedback = False
     if request.method=='POST':
-        submitted_feedback = request.POST.get('submitted_feedback')
         convert = request.POST.get('convert')
-        if submitted_feedback == '':
-            form = new_convert_Followup_call_Form(request.POST)
+        submitted_feedback = request.POST.get('submitted_feedback')
+        print(submitted_feedback)
+        if submitted_feedback == "False":
+            form = new_convert_referral_finalize_form(request.POST)
         else:
-            submitted_feedback = new_convert_followup_call.objects.get(id=submitted_feedback)
-            form = new_convert_Followup_call_Form(request.POST, instance=submitted_feedback)
+            submitted_feedback = new_convert_referral_finalize.objects.get(convert=convert)
+            form = new_convert_referral_finalize_form(request.POST, instance=submitted_feedback)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.followedup_up_by = request.user
             instance.convert = salvations.objects.get(id=convert)
             instance.save()
             return redirect('new_convert_followup')
-    form = new_convert_referral_finalize_form()
+    if submitted_feedback == False:
+        form = new_convert_referral_finalize_form()
+    else:
+        form = new_convert_referral_finalize_form(instance=submitted_feedback)
     context = {
         'convert': convert,
         'form': form,
+        'submitted_feedback': submitted_feedback,
     }
     return render(request, 'SalvationFollowups/new_Convert_feedback_refer_finalize.html', context)
 

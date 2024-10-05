@@ -81,8 +81,8 @@ class new_convert_followup_call(models.Model):
     
 class new_convert_referral_finalize(models.Model):
     convert = models.ForeignKey(salvations, models.CASCADE, null=False)
-    refer_to_church = models.TextField(verbose_name='Refer to another church:', null=False, blank=False)
-    refer_to_prayer_cell = models.ForeignKey(session_attended_options, models.CASCADE, null=False)
+    refer_to_church = models.TextField(verbose_name='Refer to another church:', null=True, blank=True)
+    refer_to_prayer_cell = models.OneToOneField(session_attended_options, models.CASCADE, null=True, blank=True)
     finalize = models.BooleanField(null=False, blank=False)
     date_of_followup = models.DateField(default=timezone.now, verbose_name = 'Date:')
     followedup_up_by = models.ForeignKey(User, models.CASCADE, null=False)
