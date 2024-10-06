@@ -3,12 +3,14 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import salvations, Converts, Followups, Requests_Feedback, Link_Church, ATTENDCHURCH, Followed_Up_by, new_convert_first_followup, new_convert_followup_call, new_convert_referral_finalize
-from .forms import ConvertsForm, PrayerRequestForm, FollowupForm, LinkchurchForm, convertForm, new_convert_First_FollowupForm, new_convert_Followup_call_Form, new_convert_referral_finalize_form
+from .forms import ConvertsForm, PrayerRequestForm, FollowupForm, LinkchurchForm, convertForm, new_convert_First_FollowupForm, new_convert_Followup_call_Form, new_convert_referral_finalize_form, Person_Form
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .filters import ConvertsFilter
 from user.models import Profile
-from people.forms import Person_Form
+from people.models import People
+from groups.models import session_attended_options
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -34,6 +36,35 @@ def add_new_convert(request):
         'form1': form1,
     }
     return render(request, 'SalvationFollowUps/Add_New_Convert.html', context)
+
+@login_required()
+def check_convert_exists(request):
+    if request.method=='POST':
+        person_id = request.POST.get('person')
+        form1 = convertForm(request.POST)
+        if form1.is_valid():
+            salvationDetails = form1.save(commit=False)
+            salvationDetails.convert_id = person_id
+            salvationDetails.save()
+            return redirect('add_new_convert')
+        
+
+    name = request.GET.get('Name')
+    name = name.strip()
+    exists = False
+    form1 = convertForm()
+    surname = request.GET.get('Surname').strip()
+    if len(name) > 1 and len(surname) > 1:
+       exists = People.objects.filter(Name=name, Surname=surname).exists()
+       if exists == True:
+        person = People.objects.get(Name=name, Surname=surname)
+    context = {
+          'exists': exists,
+          'person': person,
+          'form1': form1,
+       }
+    return render(request, 'SalvationFollowUps/check_convert_exists_modal.html', context)
+
 
 @login_required
 def new_convert_followup(request):
@@ -122,7 +153,6 @@ def new_convert_referral_finalize_view(request):
     if request.method=='POST':
         convert = request.POST.get('convert')
         submitted_feedback = request.POST.get('submitted_feedback')
-        print(submitted_feedback)
         if submitted_feedback == "False":
             form = new_convert_referral_finalize_form(request.POST)
         else:
@@ -133,10 +163,34 @@ def new_convert_referral_finalize_view(request):
             instance.followedup_up_by = request.user
             instance.convert = salvations.objects.get(id=convert)
             instance.save()
-            return redirect('new_convert_followup')
+            """group = session_attended_options.objects.get(id=instance.refer_to_prayer_cell_id)
+            contact = User.objects.get(id=group.group_leader_id)
+            convert = People.objects.get(id=instance.convert.convert_id)
+            print(contact)
+            print(contact.email)"""
+            #f"""Dear {contact},
+                  
+            """ Please could you contact {convert.Name} a recent salvation who wants to join a prayer cell and invite them to join your prayer cell.
+            These are their contact details:
+            Name: {convert.Name}
+            Surname: {convert.Surname}
+            Cell: {convert.CellNumber}
+            Email: {convert.EmailAddress}
+
+            Kind Regards,
+
+            {request.user}
+                
+                    """,
+        """      "shodandevstesting@gmail.com",
+            [contact.email],
+            fail_silently=True,"""          
+
+        return redirect('new_convert_followup')
     if submitted_feedback == False:
         form = new_convert_referral_finalize_form()
     else:
+        print(submitted_feedback)
         form = new_convert_referral_finalize_form(instance=submitted_feedback)
     context = {
         'convert': convert,

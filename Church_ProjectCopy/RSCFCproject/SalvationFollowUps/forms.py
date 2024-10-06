@@ -1,5 +1,17 @@
 from django import forms
-from .models import Converts, Requests_Feedback, Followups, Link_Church, salvations, new_convert_first_followup, new_convert_followup_call, new_convert_referral_finalize
+from .models import Converts, Requests_Feedback, Followups, Link_Church, salvations, new_convert_first_followup, new_convert_followup_call, new_convert_referral_finalize, People
+
+class Person_Form(forms.ModelForm):
+    class Meta:
+        model = People
+        fields = ['Name', 'Surname', 'CellNumber', 'EmailAddress', 'birthday', 'area', 'Gender']
+
+        widgets = {
+            'Name': forms.TextInput (attrs={'hx-get': 'check_convert_exists', 'hx-target': '#modal-here', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Surname'}),
+            'Surname': forms.TextInput (attrs= {'hx-get': 'check_convert_exists', 'hx-target': '#modal-here', 'hx-trigger': 'keyup changed delay:900ms', 'hx-include': '#id_Name'}),
+            'birthday': forms.DateInput(format='%d %B %Y'),
+        }
+
 
 class convertForm(forms.ModelForm):
     class Meta:
