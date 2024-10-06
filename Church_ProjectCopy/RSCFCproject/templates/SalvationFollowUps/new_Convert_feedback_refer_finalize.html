@@ -17,16 +17,14 @@
       <span class="border">
       <nav aria-label="...">
         <ul class="pagination pagination-sm m-2">
-          <li class="page-item">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+          <li class="page-item" hx-get="new_Convert_feedback_call" hx-target="#form1" hx-vals='{"myVal": {{convert}} }'>
+            <a class="page-link">Previous</a>
           </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item" aria-current="page">
-            <a class="page-link active" href="#">2</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#">Next</a>
+          <li class="page-item"><a class="page-link" href="">1</a></li>
+          <li class="page-item" hx-get="new_Convert_feedback_call" hx-target="#form1" hx-vals='{"myVal": {{convert}} }'><a class="page-link">2</a></li>
+          <li class="page-item active"><a class="page-link" href="">3</a></li>
+          <li class="page-item disabled">
+            <a class="page-link" href="">Next</a>
           </li>
         </ul>
       </nav>

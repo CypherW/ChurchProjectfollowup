@@ -38,11 +38,11 @@
       <li class="page-item disabled">
         <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
       </li>
-      <li class="page-item active"><a class="page-link" href="#">1</a></li>
+      <li class="page-item active"><a class="page-link" href="">1</a></li>
       <li class="page-item" hx-get="new_Convert_feedback_call" hx-target="#form1" hx-vals='{"myVal": {{followup_convert_new.id}} }'><a class="page-link">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#">Next</a>
+      <li class="page-item"  hx-get="new_convert_referral_finalize" hx-target="#form1" hx-vals='{"myVal": {{followup_convert_new.id}} }'><a class="page-link">3</a></li>
+      <li class="page-item" hx-get="new_Convert_feedback_call" hx-target="#form1" hx-vals='{"myVal": {{followup_convert_new.id}} }'>
+        <a class="page-link">Next</a>
       </li>
     </ul>
   </nav>
