@@ -20,6 +20,7 @@
     <p><b>Total:</b>   {{sunday_total}}</p>
     <br>
     <p><b>Salvations:</b> {{salvations_count}}</p>
+    <p><b>Visitors:</b> {{visitors_count}}</p>
 
     <h5 class="mb-3"><b>Groups:</b></h5>
     <p><b>Total:</b> {{ group_attendance_total }} </p>
@@ -47,6 +48,7 @@
       <p><b>Total:</b>   {{previous_sunday_total}}</p>
       <br>
       <p><b>Salvations:</b> {{previous_salvations_count}}</p>
+      <p><b>Visitors:</b> {{previous_visitors_count}}</p>
   
       <h5 class="mb-3"><b>Groups:</b></h5>
       <p><b>Total:</b> {{ previous_group_attendance_total }} </p>
@@ -60,5 +62,33 @@
           </div>
   
     </div>
+
+    <div class="col-md-6 offset-md-3 p-3">
+      <div class="card-header bg-info text-white">
+        <h5> Attendance: {{ two_sunday_ago_date_format }} to {{ two_saturday_ago_date_format }} </h5>
+      </div>
+      <div class="card shadow p-3">
+      <div class="container">
+        <br>
+        <h5 class="mb-3"><b>Sunday Service:</b></h5>
+        <p><b>1st Service:</b> {{two_Sunday_ago_first_service}} </p>
+        <p><b>2nd Service:</b> {{two_Sunday_ago_second_service}}</p>
+        <p><b>Total:</b>   {{two_sunday_ago_total}}</p>
+        <br>
+        <p><b>Salvations:</b> {{two_sunday_ago_salvations_count}}</p>
+        <p><b>Visitors:</b> {{two_sunday_ago_visitors_count}}</p>
+    
+        <h5 class="mb-3"><b>Groups:</b></h5>
+        <p><b>Total:</b> {{ two_sunday_ago_group_attendance_total }} </p>
+        <p><b>Unique Total:</b> {{ two_sunday_ago_group_attendance_total_unique }}</p>
+        
+    
+    
+    
+       
+            </div>
+            </div>
+    
+      </div>
 
 {% endblock %}

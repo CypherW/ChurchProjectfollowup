@@ -69,6 +69,9 @@ def check_convert_exists(request):
 @login_required
 def new_convert_followup(request):
     Followups_due = salvations.objects.all()
+    finalized = new_convert_referral_finalize.objects.filter(finalize=True)
+    finalized_list = list(finalized.values_list('convert_id', flat=True))
+    Followups_due = Followups_due.exclude(id__in=finalized_list)
     due_count = Followups_due.count()
     context = {
         'Followups_due': Followups_due,
@@ -153,45 +156,49 @@ def new_convert_referral_finalize_view(request):
     if request.method=='POST':
         convert = request.POST.get('convert')
         submitted_feedback = request.POST.get('submitted_feedback')
-        if submitted_feedback == "False":
+        try:
+           submitted_feedback = new_convert_referral_finalize.objects.get(convert=convert)
+           form = new_convert_referral_finalize_form(request.POST, instance=submitted_feedback)
+        except:
             form = new_convert_referral_finalize_form(request.POST)
-        else:
-            submitted_feedback = new_convert_referral_finalize.objects.get(convert=convert)
-            form = new_convert_referral_finalize_form(request.POST, instance=submitted_feedback)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.followedup_up_by = request.user
             instance.convert = salvations.objects.get(id=convert)
             instance.save()
-            """group = session_attended_options.objects.get(id=instance.refer_to_prayer_cell_id)
-            contact = User.objects.get(id=group.group_leader_id)
-            convert = People.objects.get(id=instance.convert.convert_id)
-            print(contact)
-            print(contact.email)"""
-            #f"""Dear {contact},
-                  
-            """ Please could you contact {convert.Name} a recent salvation who wants to join a prayer cell and invite them to join your prayer cell.
-            These are their contact details:
-            Name: {convert.Name}
-            Surname: {convert.Surname}
-            Cell: {convert.CellNumber}
-            Email: {convert.EmailAddress}
+            group_referral = instance.refer_to_prayer_cell_id
+            if group_referral  != None:
+                group = session_attended_options.objects.get(id=instance.refer_to_prayer_cell_id)
+                contact = User.objects.get(id=group.group_leader_id)
+                convert = People.objects.get(id=instance.convert.convert_id)
+                contact
+                contact.email
+                send_mail("PLEASE FOLLOW UP RECENT SALVATION",
+                f"""Dear {contact},
+                    
+Please could you contact {convert.Name} a recent salvation who wants to join a prayer cell and invite them to join your prayer cell.
+            
+        {convert.Name}\'s contact details are:
+        Name: {convert.Name}
+        Surname: {convert.Surname}
+        Cell: {convert.CellNumber}
+        Email: {convert.EmailAddress}
 
-            Kind Regards,
+Kind Regards,
 
-            {request.user}
-                
-                    """,
-        """      "shodandevstesting@gmail.com",
-            [contact.email],
-            fail_silently=True,"""          
+{request.user}
+                    
+                        """,
+                "shodandevstesting@gmail.com",
+                [contact.email],
+                fail_silently=True,)          
 
         return redirect('new_convert_followup')
-    if submitted_feedback == False:
-        form = new_convert_referral_finalize_form()
     else:
-        print(submitted_feedback)
-        form = new_convert_referral_finalize_form(instance=submitted_feedback)
+        if submitted_feedback == False:
+            form = new_convert_referral_finalize_form()
+        else:
+            form = new_convert_referral_finalize_form(instance=submitted_feedback)
     context = {
         'convert': convert,
         'form': form,

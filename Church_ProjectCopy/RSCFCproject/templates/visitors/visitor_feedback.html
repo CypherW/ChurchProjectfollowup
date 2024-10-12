@@ -1,0 +1,53 @@
+{% extends 'partials/groups_base.html' %}
+{% block title %} Feedback Form {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<div class="col-md-6 offset-md-3 p-3">
+  <div class="card-header bg-info text-white id={{date}}">
+    <h5> <b>Followup: {{ followup_visitor.visitor.Name }} {{ followup_visitor.visitor.Surname }}</h5>
+  </div>
+  <div class="card shadow p-3">
+  <div class="container mt-2">
+    <p><h6><b>Phone number:</b> <a href="tel:{{ followup_visitor.visitor.CellNumber}}">{{ followup_visitor.visitor.CellNumber }}</a></h6></p>
+    <p><h6><b>Email Address:</b> <a href="mailto:{{ followup_visitor.visitor.EmailAddress }}">{{ followup_visitor.visitor.EmailAddress }}</a> </h6></p>
+    <p><h6><b>Date of Visit:</b> {{ followup_visitor.dateofvisit|date:"d F Y" }}</h6></p>
+    <p><h6><b>Contact Preference:</b> {{ followup_visitor.contactMethod }}</h6></p>
+    <p><h6><b>Area:</b> {{ followup_visitor.visitor.area }}</h6></p>
+    
+    </div>
+    <div class="" id="form1">
+  <div class="container mt-3">
+  <form method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+  <div class="mt-2 d-flex justify-content-md-center" id="buttons">
+  <a class="btn btn-danger btn-med m-2" href="{% url 'visitor_followup' %}">Cancel</a>
+  <input class="btn btn-primary bg-info btn-med m-2" type="submit" value="Submit">
+  </div>
+  </form>
+  </div>
+  <span class="border">
+  <nav aria-label="...">
+    <ul class="pagination pagination-sm m-2">
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+      </li>
+      <li class="page-item active"><a class="page-link" href="">1</a></li>
+      <li class="page-item" hx-get="visitor_feedback_call" hx-target="#form1" hx-vals='{"myVal": {{followup_visitor.id}} }'><a class="page-link">2</a></li>
+      <li class="page-item"  hx-get="visitor_referral_finalize_view" hx-target="#form1" hx-vals='{"myVal": {{followup_visitor.id}} }'><a class="page-link">3</a></li>
+      <li class="page-item" hx-get="visitor_feedback_call" hx-target="#form1" hx-vals='{"myVal": {{followup_visitor.id}} }'>
+        <a class="page-link">Next</a>
+      </li>
+    </ul>
+  </nav>
+</span>
+</div>
+</div>
+</div>
+
+{% endblock %}

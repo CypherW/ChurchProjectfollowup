@@ -1,0 +1,32 @@
+{% load crispy_forms_tags %}
+  
+  <div class="" id="form1">
+      <div class="container mt-3">
+      <form action="{% url 'visitor_referral_finalize_view' %}" method="POST">
+        <input hidden value="{{visitor}}" id="visitor" name="visitor">
+        <input hidden value="{{submitted_feedback}}" id="submitted_feedback" name="submitted_feedback">
+
+        {% csrf_token %}
+        {{ form|crispy }}
+      <div class="mt-2 d-flex justify-content-md-center" id="buttons">
+      <a class="btn btn-danger btn-med m-2" href="{% url 'visitor_followup' %}">Cancel</a>
+      <input class="btn btn-primary bg-info btn-med m-2" type="submit" value="Submit">
+      </div>
+      </form>
+      </div>
+      <span class="border">
+      <nav aria-label="...">
+        <ul class="pagination pagination-sm m-2">
+          <li class="page-item" hx-get="visitor_feedback_call" hx-target="#form1" hx-vals='{"myVal": {{visitor}} }'>
+            <a class="page-link">Previous</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="">1</a></li>
+          <li class="page-item" hx-get="visitor_feedback_call" hx-target="#form1" hx-vals='{"myVal": {{visitor}} }'><a class="page-link">2</a></li>
+          <li class="page-item active"><a class="page-link" href="">3</a></li>
+          <li class="page-item disabled">
+            <a class="page-link" href="">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </span>
+    </div>
