@@ -19,7 +19,7 @@ from datetime import timedelta
 def service_countspage(request):
     date = timezone.now().date()
     try:
-        previous_submission = service_counts.objects.get(service_date=date)
+        previous_submission = service_counts.objects.get(dateofmeeting=date)
     except:
         previous_submission = False
     if request.method=='POST':
@@ -32,7 +32,6 @@ def service_countspage(request):
             counter = request.user.id
             instance.counter = User.objects.get(id=counter)
             instance.save()
-            print(instance.first_service_count)
             messages.success(request, f'Count has been updated. 1st servce:{instance.first_service_count} 2nd Service:{instance.second_service_count}')
             return redirect('service_counts')
     else:

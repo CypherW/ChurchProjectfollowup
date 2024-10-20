@@ -1,0 +1,36 @@
+{% extends 'partials/groups_base.html' %}
+{% block title %} Attendance Counts {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+{% for meeting in feedback %}
+
+<div class="col-md-6 offset-md-3 p-3">
+  <div class="card-header bg-info text-white">
+    <h5> Date: {{ meeting.dateofmeeting }}</h5>
+  </div>
+  <div class="card shadow p-3">
+  <div class="container">
+    <br>
+    <h5 class="mb-3"><b>{{meeting.meeting_type}}:</b></h5>
+    <p><b>Adults:</b> {{meeting.adults_attending}} </p>
+    <p><b>Children:</b> {{meeting.children_attending}}</p>
+    <p><b>Total:</b> {{ meeting.adults_attending|add:meeting.children_attending }} </p>
+    <br>
+    <p><b>Salvations:</b> {{meeting.salvations}}</p>
+
+   
+    <p><b>Feedback:</b> {{ meeting.general_feedback }}</p>
+    
+   
+        </div>
+        </div>
+
+  </div>
+  {% endfor %}
+
+  {% endblock %}

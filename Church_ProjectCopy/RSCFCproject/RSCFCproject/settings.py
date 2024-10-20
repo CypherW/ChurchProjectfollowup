@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'groups',
     'people',
     'services',
+    'campuses',
 ]
 
 MIDDLEWARE = [

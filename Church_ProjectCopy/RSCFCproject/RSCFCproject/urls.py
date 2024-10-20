@@ -27,6 +27,7 @@ urlpatterns = [
     path('', include('groups.urls')),
     path('', include('people.urls')),
     path('', include('services.urls')),
+    path('', include('campuses.urls')),
   #  path('register/',  user_view.register, name='user-register'),
     path('profile/',  user_view.profile, name='user-profile'),
     path('profile/update',  user_view.profile_update, name='user-profile-update'),
