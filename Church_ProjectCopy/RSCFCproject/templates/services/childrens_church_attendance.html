@@ -1,0 +1,87 @@
+{% extends 'partials/groups_base.html' %}
+{% block title %} Attendance {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+<style> 
+
+  .headr1 { 
+      position: sticky; 
+      top: calc(0px + 2rem);
+      z-index:1010;
+  } 
+
+
+
+  .topBar {
+    margin-left: 5px;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    background-color:white;
+  
+  }
+  
+</style> 
+<div class="topBar container d-flex justify-content-md-center">
+  <div class="row row-cols-12 row-cols-md-12">
+  <form method="POST" class="d-flex flex-wrap">
+    
+      <input class="m-2" type="text" id="searchField" placeholder="Search"
+      hx-get="load_searchByTyping_add_present"
+      hx-target="#attendance_table"
+      hx-trigger="keyup changed delay:100ms"
+      hx-include="#id_session_attended, #id_dateofvisit"
+      name="search"
+      >
+  <div class="d-flex inline mb-2"
+  hx-trigger="load"
+  hx-get="class_serviceComdinedOptions/{{user_id}}"
+  hx-target="#id_class_attending">
+  {% csrf_token %}
+  {{ form }}
+  </div>
+  <div class="d-flex inline">
+  <a button class ="btn btn-primary bg-info  btn-sm m-2" href="{% url 'present_bysession' %}">View Present</a>
+    <input class="btn btn-primary bg-info btn-sm m-2" type="submit" value="Give Feedback">
+    <a button class="btn btn-primary bg-info  btn-sm m-2" href="{% url 'addPerson_childrens_church' %}">Add
+      <svg xmlns="" width="16" height="16" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
+        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+        <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+      </svg>
+    </a>
+    </div>
+  </form>
+  </div>
+  </div> 
+ 
+
+
+<div id="tabs" hx-get="/tab1" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>
+<div class="app-table" id="attendance_table">
+  <!--Table-->
+<div class="container d-flex justify-content-center">
+  <table class="table table-hover">
+      <thead class="bg-info">
+        <tr class="text-white">
+          <th class="" scope="col">Name</th>
+          <th class="text-nowrap" scope="col">Phone Number</th>
+          <th class="" scope="col">Total: {{ attendee_list_count }}</th>
+          <th class="" id="switchCount" scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Please select a session type</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+
+{% endblock %}

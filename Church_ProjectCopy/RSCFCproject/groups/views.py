@@ -312,14 +312,6 @@ def addPerson_Parent(request, pk):
             guardianRelation_instance = guardianRelation(parent=parent)
             guardianRelation_instance.child = child
             guardianRelation_instance.save()
-            checks = request.POST.getlist('checks[]')
-            for check in checks:
-                newMember = People.objects.get(pk=obj.id)
-                groupAddedto = session_attended_options.objects.get(pk=check)
-                group_membership_instance = group_membership(member=newMember)
-                group_membership_instance.group = groupAddedto
-                group_membership_instance.active = True
-                group_membership_instance.save()
             
                 
             return redirect('group_attendance')

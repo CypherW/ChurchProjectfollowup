@@ -1,0 +1,42 @@
+<script>
+  document.body.addEventListener('htmx:configRequest', (event) =>
+  {
+    event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+
+  });
+</script>
+
+<div class="container d-flex justify-content-center">
+    <table class="table table-hover">
+        <thead  class="sticky-top bg-info">
+          <tr class="text-white">
+            <th class="" scope="col">Name</th>
+            <th class="text-nowrap" scope="col">Age</th>
+            <th id="id_present_attendance" class="" scope="col"
+            hx-get="{% url 'update_class_count' %}"
+            hx-trigger="mark_child_present from:body"
+            hx-include="#id_class_attending, #id_date"
+            hx-swap="outerHTML">Total: {{ attendee_list_count }}</th>
+          </tr>
+        </thead>
+        <tbody>
+    {% for member in members %}
+    <tr id="row_{{ member.child_id }}">
+        <td><a href="{% url 'group_person_detail' member.child_id %}">{{ member.child.Name }} {{ member.child.Surname }}</a></td>
+        <td>{{ member.child.age }}</td>
+        <td>
+            <a class="form-check form-switch">
+                <input class="form-check-input switch" type="checkbox"
+                       hx-get="{% url 'mark_child_present' member.child.pk %}"
+                       hx-trigger="change" hx-target="#row_{{ member.child_id }}" hx-swap="outerHTML"
+                       hx-include="#id_class_attending, #id_date"
+                       hx-on:mark_child_present="this.closest('tr').remove()"
+                       name="" id="{{ member.pk }}">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Mark Present</label>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+      </table>
+    </div>

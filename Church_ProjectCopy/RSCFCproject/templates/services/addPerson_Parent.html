@@ -1,0 +1,44 @@
+{% extends 'partials/groups_base.html' %}
+{% block title %} Add Parent {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+<div id="modal-here"></div>
+<div id="modals-here"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<input hidden value="{{ child }}" id="child" name="child">
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-6 offset-md-3">
+            <div class="border bg-white p-3">
+                <h3 class="bg-info text-white p-3">Add Parent  for {{ child_detail.Name }} {{ child_detail.Surname }}</h3>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                       
+                <div class="form-check mb-3" id="group_option_form">
+                  
+                <div class="mt-2" id="buttons">
+                <a class="btn btn-danger" href="{% url 'childrens_church_attendance' %}">Cancel</a>
+                <input class="btn btn-info" type="submit" value="Confirm">
+                </div>
+                </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
