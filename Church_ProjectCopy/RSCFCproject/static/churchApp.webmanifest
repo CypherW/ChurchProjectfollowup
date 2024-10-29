@@ -1,6 +1,7 @@
  {
     "name": "RSCFC App",
     "short_name": "RSCFC",
+    "scope": "*",
     "description": "Church app to help us better provide care for the people God has given us and to help fulfill the vision and mission we have.",
     "icons": [
       {
