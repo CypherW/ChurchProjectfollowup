@@ -124,6 +124,22 @@ def stats(request):
     previous_sunday_total = previous_first_service + previous_second_service
 
     try:
+        prev_childrens_church_count_1st = class_attendance.objects.filter(dateofclass=one_week_ago_sunday, service='1').values_list('child')
+        prev_childrens_church_count_1st = prev_childrens_church_count_1st.count()
+       
+    except:
+        prev_childrens_church_count_1st = 0
+
+    try:
+        prev_childrens_church_count_2nd = class_attendance.objects.filter(dateofclass=one_week_ago_sunday, service='2').values_list('child')
+        prev_childrens_church_count_2nd = prev_childrens_church_count_2nd.count()
+       
+    except:
+        prev_childrens_church_count_2nd = 0
+        
+    prev_childrens_church_total = prev_childrens_church_count_1st + prev_childrens_church_count_2nd
+
+    try:
         two_Sunday_ago_counts = service_counts.objects.get(service_date=two_weeks_ago_sunday)
         two_Sunday_ago_first_service = two_Sunday_ago_counts.first_service_count
         two_Sunday_ago_second_service = two_Sunday_ago_counts.second_service_count
@@ -133,6 +149,23 @@ def stats(request):
         two_Sunday_ago_second_service = 0
         
     two_sunday_ago_total = two_Sunday_ago_first_service + two_Sunday_ago_second_service
+
+    try:
+        two_sundays_ago_childrens_church_count_1st = class_attendance.objects.filter(dateofclass=two_weeks_ago_sunday, service='1').values_list('child')
+        two_sundays_ago_childrens_church_count_1st = two_sundays_ago_childrens_church_count_1st.count()
+       
+    except:
+        two_sundays_ago_childrens_church_count_1st = 0
+
+    try:
+        two_sundays_ago_childrens_church_count_2nd = class_attendance.objects.filter(dateofclass=two_weeks_ago_sunday, service='2').values_list('child')
+        two_sundays_ago_childrens_church_count_2nd = two_sundays_ago_childrens_church_count_2nd.count()
+       
+    except:
+        two_sundays_ago_childrens_church_count_2nd = 0
+        
+    two_sundays_ago_childrens_church_total = two_sundays_ago_childrens_church_count_1st + two_sundays_ago_childrens_church_count_2nd
+
 
     group_attendance_total = session_attendance.objects.filter(dateofvisit__gte=most_recent_sunday, dateofvisit__lte=most_recent_saturday).count
     group_attendance_total_unique = session_attendance.objects.filter(dateofvisit__gte=most_recent_sunday, dateofvisit__lte=most_recent_saturday).distinct('attendee_id').count
@@ -169,6 +202,9 @@ def stats(request):
         'saturday_date_format': saturday_date_format,
         'group_attendance_total': group_attendance_total,
         'group_attendance_total_unique': group_attendance_total_unique,
+        'prev_childrens_church_count_1st': prev_childrens_church_count_1st,
+        'prev_childrens_church_count_2nd': prev_childrens_church_count_2nd,
+        'prev_childrens_church_total': prev_childrens_church_total,
         'previous_first_service': previous_first_service,
         'previous_second_service': previous_second_service,
         'previous_sunday_date_format': previous_sunday_date_format,
@@ -180,6 +216,9 @@ def stats(request):
         'previous_salvations_count': previous_salvations_count,
         'visitors_count': visitors_count,
         'previous_visitors_count': previous_visitors_count,
+        'two_sundays_ago_childrens_church_count_1st': two_sundays_ago_childrens_church_count_1st,
+        'two_sundays_ago_childrens_church_count_2nd': two_sundays_ago_childrens_church_count_2nd,
+        'two_sundays_ago_childrens_church_total': two_sundays_ago_childrens_church_total,
         'two_Sunday_ago_first_service': two_Sunday_ago_first_service,
         'two_Sunday_ago_second_service': two_Sunday_ago_second_service,
         'two_sunday_ago_total': two_sunday_ago_total,
@@ -388,6 +427,36 @@ def load_class_members(request):
     class_list = class_list.exclude(id__in=attendee_list)
     class_list = class_list.order_by('child_id__Name')
     
+    context = {
+        'members': class_list,
+        'attendee_list_count': attendee_list_count,
+    }
+    return render(request, 'services/load_class_members.html', context)
+
+@login_required
+def load_searchByTyping_add_present_learner(request):
+    class_values = request.GET.get('class_attending')
+    class_values = class_values.split(':')
+    class_id = childrensChurch_classes.objects.get(class_name=class_values[0])
+    service_choices = service_attended
+    for service in service_choices:
+        for descrip in service:
+            if descrip == class_values[1].strip():
+                class_num_check = class_num
+                break
+            else:
+                class_num = descrip
+    date_of_class = request.GET.get('date')
+    attendee_list = class_attendance.objects.filter(dateofclass=date_of_class, class_name=class_id.id, service=class_num_check).values_list('child')
+    attendee_list_count = attendee_list.count()
+    search_term = request.GET.get('search')
+    class_list = childrensChurch_class_member.objects.filter(class_attending=class_id, active=True)
+    attendee_list = list(attendee_list.values_list('child_id', flat=True))
+    class_list = class_list.exclude(child_id__in=attendee_list)
+    class_list = class_list.order_by('child_id__Name')
+    class_list = class_list.filter(
+            child__Name__istartswith=search_term) | class_list.filter(
+            child__Surname__istartswith=search_term)
     context = {
         'members': class_list,
         'attendee_list_count': attendee_list_count,
