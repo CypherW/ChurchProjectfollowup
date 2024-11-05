@@ -6,8 +6,7 @@
 <div class="card my-card shadow text-center p-3">
 <ul class="list_group list-group-flush">
     <li class="list-group-item fw-bold text-start">Present: {{ count}}</li>
-    <li class="list-group-item fw-bold text-start">Absent: {{absent}}</li>
-    <li class="list-group-item text-start"><b>{{groupFeedback }}</b></li>    
+    <li class="list-group-item fw-bold text-start">Absent: {{absent}}</li>  
                     </ul>
                     <button id="feedback_button" class="btn bg-warning" hx-get="{% url 'noFeedback_button' %}" hx-include="#id_session_attended_options" 
                     hx-vals='{"eventDate": "{{ date }}", "session_id": "{{ session_id }}"}', hx-target="#emailSent{{ id_add }}">Request Feedback</button> 
@@ -20,7 +19,6 @@
 <ul class="list_group list-group-flush">
     <li class="list-group-item fw-bold text-start">Present: {{ count}}</li>
     <li class="list-group-item fw-bold text-start">Absent: {{absent}}</li>
-    <li class="list-group-item text-start"><b>Feedback:</b> {{groupFeedback }}</li>
                     </ul>
                     <button id="feedback_button"
                     hx-get="{% url 'display_event_feedback_modal' %}"

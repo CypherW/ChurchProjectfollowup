@@ -27,10 +27,20 @@
 
 
 <div class="input-container mt-4">
+  
   <form method="POST">
  {% csrf_token %}
  {{ form.as_p }}
 </form>
+<button id="feedback_button"
+                    hx-get="{% url 'display_event_feedback_modal' %}"
+                    hx-target="#modals-here"
+                    hx-trigger="click"
+                    hx-include="#id_session_attended_options" hx-vals='{"eventDate": "{{ date }}", "session_id": "{{ session_id }}"}'
+                    data-bs-toggle="modal"
+                    data-bs-target="#modals-here"
+                    class="btn bg-info btn-sm m-3">View Feedback</button>    
+                                      </div>
 </div>
 
     <div id="modals-here"

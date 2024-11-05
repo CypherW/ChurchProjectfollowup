@@ -41,7 +41,9 @@ class childrensChurchAttendanceForm(forms.Form):
             self.initial['date'] = timezone.localtime().date()
             
     class_attending = forms.ModelChoiceField(queryset=childrensChurch_classes.objects.none(),
-                                  widget=forms.Select(attrs={"hx-get": "load_class_members", "hx-include": "#id_date, #id_class_attending", "hx-target": "#attendance_table", 'class': 'm-2'}))
+                                  widget=forms.Select(attrs={"hx-get": "load_class_members", "hx-include": "#id_date, #id_class_attending", "hx-target": "#attendance_table", 'class': 'm-2'}),
+                                  label='Class'
+    )
     
    
     date = forms.DateField(widget=forms.DateInput(attrs={'hx-get': 'load_class_members', 'hx-target': '#attendance_table', 'hx-include': '#id_class_attending', 'type': 'date', 'style': 'width: 130px;', 'class': 'm-2'}))
