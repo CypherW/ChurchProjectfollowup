@@ -57,7 +57,7 @@ class group_meetingsForm(forms.ModelForm):
     session_attended = widget=forms.Select(attrs={'id': 'session'})
 
 class group_type_select(forms.Form):
-    session_attended_options = forms.ModelChoiceField(queryset=session_attended_options.objects.all(),
+    session_attended_options = forms.ModelChoiceField(queryset=session_attended_options.objects.order_by('session_attended'),
                                                       widget=forms.Select(attrs={"hx-get": "load_event_dates", "hx-target": "#meeting_listings", "class": 'm-2'}),
                                                     label='Group:'
     )

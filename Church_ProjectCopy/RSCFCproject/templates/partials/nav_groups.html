@@ -81,6 +81,8 @@
             <li class="nav-item"><a class=" text-light m-2 text-decoration-none" href="{% url 'childrens_church_attendance' %}">Children's Church</a></li>
             {% if perms.groups.view_prayer_cell_feedback %}
             <li class="nav-item"><a class=" text-light m-2 text-decoration-none" href="{% url 'service_counts' %}">Service Counts</a></li>
+            {% endif %}
+            {% if perms.services.view_service_counts %}
             <li class="nav-item"><a class=" text-light m-2 text-decoration-none" href="{% url 'stats' %}">Stats</a></li>
             {% endif %}
           </ul>

@@ -74,11 +74,12 @@ class new_convert_Followup_call_Form(forms.ModelForm):
 class new_convert_referral_finalize_form(forms.ModelForm):
     class Meta:
         model = new_convert_referral_finalize
-        fields = ['refer_to_church', 'refer_to_prayer_cell', 'finalize', 'date_of_followup']
+        fields = ['refer_to_church', 'refer_to_prayer_cell', 'refer_to_campus', 'finalize', 'date_of_followup']
 
         widgets = {
             'refer_to_church': forms.TextInput(),
             'prayer_request': forms.Textarea(attrs={'class': 'small-textarea', 'rows': 2, 'cols': 20, 'class': 'm-2'}),
+            'refer_to_prayer_cell': forms.Select(attrs={'class': 'm-1'}),
             'refer_to_prayer_cell': forms.Select(attrs={'class': 'm-1'}),
             'date_of_followup': forms.DateInput(attrs={'type': 'date', 'style': 'width: 170px;', 'class': 'm-2'}),
                 } 

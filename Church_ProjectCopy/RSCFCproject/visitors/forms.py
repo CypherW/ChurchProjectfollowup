@@ -70,18 +70,20 @@ class visitor_Followup_call_Form(forms.ModelForm):
 class visitor_referral_finalize_form(forms.ModelForm):
     class Meta:
         model = visitor_referral_finalize
-        fields = ['refer_to_church', 'refer_to_prayer_cell', 'finalize', 'date_of_followup']
+        fields = ['refer_to_church', 'refer_to_prayer_cell', 'refer_to_campus', 'finalize', 'date_of_followup']
 
         widgets = {
             'refer_to_church': forms.TextInput(),
             'prayer_request': forms.Textarea(attrs={'class': 'small-textarea', 'rows': 2, 'cols': 20, 'class': 'm-2'}),
             'refer_to_prayer_cell': forms.Select(attrs={'class': 'm-1'}),
+            'refer_to_campus': forms.Select(attrs={'class': 'm-1'}),
             'date_of_followup': forms.DateInput(attrs={'type': 'date', 'style': 'width: 170px;', 'class': 'm-2'}),
                 } 
 
         labels = {
             'refer_to_church': 'If referred to another church please input the name of the church?',
             'refer_to_prayer_cell:': 'Refer to prayer cell:',
+            'refer_to_campus': 'Refer to campus:',
             'finalize': 'Click to mark as finalized:',
             'date_of_followup': 'Date:',
         }

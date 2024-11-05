@@ -4,6 +4,7 @@ from django.utils import timezone
 import datetime
 from SalvationFollowUps.models import Converts
 from people.models import People
+from campuses.models import campuses_details
 from groups.models import session_attended_options
 
 # Create your models here.
@@ -65,6 +66,7 @@ class visitor_referral_finalize(models.Model):
     visitor = models.ForeignKey(visit_details, models.CASCADE, null=False)
     refer_to_church = models.TextField(verbose_name='Refer to another church:', null=True, blank=True)
     refer_to_prayer_cell = models.ForeignKey(session_attended_options, models.CASCADE, null=True, blank=True)
+    refer_to_campus = models.ForeignKey(campuses_details, models.CASCADE, null=True, blank=True)
     finalize = models.BooleanField(null=False, blank=False)
     date_of_followup = models.DateField(default=timezone.now, verbose_name = 'Date:')
     followedup_up_by = models.ForeignKey(User, models.CASCADE, null=False)
@@ -73,7 +75,7 @@ class visitor_referral_finalize(models.Model):
         verbose_name_plural = 'Visitor Referral and Finalize'
 
     def __str__(self):
-        return f'{self.visitor} {self.refer_to_church} {self.refer_to_prayer_cell} {self.finalize} {self.date_of_followup} {self.followedup_up_by}'
+        return f'{self.visitor} {self.refer_to_church} {self.refer_to_prayer_cell} {self.refer_to_campus} {self.finalize} {self.date_of_followup} {self.followedup_up_by}'
 
 
 #### OLD TO BE DELETED ####

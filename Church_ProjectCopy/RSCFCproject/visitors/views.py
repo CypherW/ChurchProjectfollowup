@@ -5,6 +5,7 @@ from .forms import ConvertsForm, visit_dateInlineFormset, visitorFollowupForm, v
 from .models import visit_date, visit_details, visitor_first_followup, visitor_followup_call, visitor_referral_finalize
 from people.models import People
 from groups.models import session_attended_options
+from campuses.models import campuses_details
 from SalvationFollowUps.models import Converts
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -188,7 +189,34 @@ Kind Regards,
                         """,
                 "shodandevstesting@gmail.com",
                 [contact.email],
-                fail_silently=True,)          
+                fail_silently=True,)  
+
+            campus_referral = instance.refer_to_campus_id
+            if campus_referral  != None:
+                campus = campuses_details.objects.get(id=instance.refer_to_campus_id)
+                contact = User.objects.get(id=campus.campus_leader_id)
+                visitor = People.objects.get(id=instance.visitor.visitor_id)
+                contact
+                contact.email
+                send_mail("PLEASE FOLLOW UP RECENT VISITOR",
+                f"""Dear {contact},
+                    
+Please could you contact {visitor.Name} a recent first time visitor who lives in your area.
+            
+        {visitor.Name}\'s contact details are:
+        Name: {visitor.Name}
+        Surname: {visitor.Surname}
+        Cell: {visitor.CellNumber}
+        Email: {visitor.EmailAddress}
+
+Kind Regards,
+
+{request.user}
+                    
+                        """,
+                "shodandevstesting@gmail.com",
+                [contact.email],
+                fail_silently=True,)        
 
         return redirect('visitor_followup')
     else:

@@ -10,6 +10,7 @@ from .filters import ConvertsFilter
 from user.models import Profile
 from people.models import People
 from groups.models import session_attended_options
+from campuses.models import campuses_details
 from django.core.mail import send_mail
 
 # Create your views here.
@@ -191,7 +192,36 @@ Kind Regards,
                         """,
                 "shodandevstesting@gmail.com",
                 [contact.email],
-                fail_silently=True,)          
+                fail_silently=True,)
+
+        campus_referral = instance.refer_to_campus_id
+        if campus_referral  != None:
+            campus = campuses_details.objects.get(id=instance.refer_to_campus_id)
+            contact = User.objects.get(id=campus.campus_leader_id)
+            convert = People.objects.get(id=instance.convert.convert_id)
+            contact
+            contact.email
+            send_mail("PLEASE FOLLOW UP RECENT SALVATION",
+            f"""Dear {contact},
+                
+Please could you contact {convert.Name} a recent salvation who lives in your area.
+        
+    {convert.Name}\'s contact details are:
+    Name: {convert.Name}
+    Surname: {convert.Surname}
+    Cell: {convert.CellNumber}
+    Email: {convert.EmailAddress}
+
+Kind Regards,
+
+{request.user}
+                
+                    """,
+            "shodandevstesting@gmail.com",
+            [contact.email],
+            fail_silently=True,)
+
+                 
 
         return redirect('new_convert_followup')
     else:

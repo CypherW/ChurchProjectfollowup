@@ -647,6 +647,7 @@ def redirect_display_event_feedback_modal(request):
 @login_required
 def add_toGroupForm(request):
     group_options = session_attended_options.objects.all()
+    group_options = group_options.order_by('session_attended')
     context = {
         'group_options': group_options
     }
