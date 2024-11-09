@@ -17,6 +17,8 @@ urlpatterns = [
     path('services/load_searchByTyping_add_present_learner', views.load_searchByTyping_add_present_learner, name='load_searchByTyping_add_present_learner'),
     path('groups/mark_child_present/<int:pk>', views.mark_child_present, name='mark_child_present'),
     path('groups/update_class_count', views.update_class_count, name='update_class_count'),
+    path('services/childrens_church_check_present', views.childrens_church_check_present, name='childrens_church_check_present'),
+    path('groups/remove_attendee/<int:pk>', views.remove_attendee, name='remove_attendee'),
 
 
     

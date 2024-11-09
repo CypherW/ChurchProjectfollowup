@@ -28,6 +28,17 @@
   }
   
 </style> 
+
+<div id="modals-here"
+class="modal modal-blur fade"
+style="display: none"
+aria-hidden="false"
+tabindex="-1">
+<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content"></div>
+</div>
+</div>
+
 <div class="topBar container d-flex justify-content-md-center">
   <div class="row row-cols-12 row-cols-md-12">
   <form method="POST" class="d-flex flex-wrap">
@@ -52,7 +63,18 @@
   {{ form }}
   </div>
   <div class="d-flex inline">
-  <a button class ="btn btn-primary bg-info  btn-sm m-2" href="{% url 'present_bysession' %}">View Present</a>
+  <!-- TEST MODAL VIEW PRESENT-->
+
+  <a button class="btn btn-primary bg-info  btn-sm m-2"
+                    hx-get="{% url 'childrens_church_check_present' %}"
+                    hx-target="#modals-here"
+                    hx-trigger="click"
+                    hx-include="#id_date, #id_class_attending"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modals-here"
+                    class="btn bg-info">View Present</a>    
+                                      </div>
+  <!--<a button class ="btn btn-primary bg-info  btn-sm m-2" href="{% url 'present_bysession' %}">View Present</a> -->
     <input class="btn btn-primary bg-info btn-sm m-2" type="submit" value="Give Feedback">
     <a button class="btn btn-primary bg-info  btn-sm m-2" href="{% url 'addPerson_childrens_church' %}">Add
       <svg xmlns="" width="16" height="16" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
