@@ -18,7 +18,8 @@ urlpatterns = [
     path('groups/mark_child_present/<int:pk>', views.mark_child_present, name='mark_child_present'),
     path('groups/update_class_count', views.update_class_count, name='update_class_count'),
     path('services/childrens_church_check_present', views.childrens_church_check_present, name='childrens_church_check_present'),
-    path('groups/remove_attendee/<int:pk>', views.remove_attendee, name='remove_attendee'),
+    path('services/remove_attendee_childrens_church/<int:pk>', views.remove_attendee_childrens_church, name='remove_attendee_childrens_church'),
+    path('services/update_present_class_count', views.update_present_class_count, name='update_present_class_count'),
 
 
     

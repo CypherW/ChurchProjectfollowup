@@ -24,9 +24,9 @@
             <th class="header1 bg-info" scope="col">Age</th>
             <th class="header1 bg-info" scope="col">Gender</th>
             <th id="id_present_attendance" class="header1 bg-info" scope="col"
-            hx-get="{% url 'update_present_count' %}"
-            hx-trigger="remove_attendee from:body"
-            hx-include="#id_date, #id_meeting_attended"
+            hx-get="{% url 'update_present_class_count' %}"
+            hx-trigger="remove_attendee_childrens_church from:body"
+            hx-include="{{ date }}, {{ class_attending }}"
             hx-swap="outerHTML">Total: {{ count }}
             <a button class="btn btn-danger bg-danger  btn-sm" data-bs-dismiss="modal">X</a></th>
 
@@ -35,12 +35,12 @@
         <tbody>
             {% for attendee in attendee_list %}
             <tr>
-              <td><a href="{% url 'group_person_detail' attendee.child.id %}">{{ attendee.attendee.child.Name }} {{ attendee.child.Surname }} </a></td>
-              <td>{{ attendee.child.age }}</td>
-              <td>{{ attendee.child.Gender }}</td>
+              <td><a href="{% url 'group_person_detail' attendee.child.child.id %}">{{ attendee.child.child.Name }} {{ attendee.child.child.Surname }} </a></td>
+              <td>{{ attendee.child.child.age }}</td>
+              <td>{{ attendee.child.child.Gender }}</td>
               <td>
                 <a class="form-check form-switch">
-                <input class="form-check-input switch" type="checkbox" hx-delete="{% url 'remove_attendee' attendee.pk %}" hx-trigger="change" 
+                <input class="form-check-input switch" type="checkbox" hx-delete="{% url 'remove_attendee_childrens_church' attendee.pk %}" hx-trigger="change" 
                 hx-target="this" hx-swap="outerHTML" hx-on:remove_attendee="this.closest('tr').remove()" name="" id="{{ attendee.id }}" checked>
                 <label class="form-check-label" for="flexSwitchCheckDefault">Absent/Present</label>
                 {% endfor %}

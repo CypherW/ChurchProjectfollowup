@@ -14,6 +14,7 @@ from django.contrib import messages
 from datetime import timedelta
 from django_htmx.http import trigger_client_event
 from django.views.decorators.http import require_http_methods
+import json
 
 
 
@@ -527,25 +528,48 @@ def childrens_church_check_present(request):
                 class_num = descrip
     date_of_class = request.GET.get('date')
     attendee_list = class_attendance.objects.filter(dateofclass=date_of_class, class_name=class_id.id, service=class_num_check)
-    print(attendee_list)
+    attendee_list = attendee_list.order_by('child__child__Name')
     attendee_list_count = attendee_list.count()
-    #class_list = childrensChurch_class_member.objects.filter(id__in=attendee_list)
-    #class_list = class_list.order_by('child_id__Name')
+    class_list = childrensChurch_class_member.objects.filter(id__in=attendee_list)
+    class_list = class_list.order_by('child_id__Name')
     
     context = {
         'count': attendee_list_count,
         'attendee_list': attendee_list,
+        'class_attending': class_values,
+        'date':  date_of_class,
     }
 
     return render(request, 'services/childrens_church_check_present.html', context)
 
 @login_required
 @require_http_methods('DELETE')
-def remove_attendee(request, pk):
+def remove_attendee_childrens_church(request, pk):
     attendee = get_object_or_404(class_attendance, pk=pk)
     attendee.delete()
     response = HttpResponse(status=204)
     response['HX-Trigger'] = json.dumps({"remove_attendee": "remove_attendee"})
     response = trigger_client_event(response, 'remove_attendee')
     return response
+
+@login_required
+def update_present_class_count(request):
+    class_values = request.GET.get('class_attending')
+    print(class_values)
+    class_values = class_values.split(':')
+    class_id = childrensChurch_classes.objects.get(class_name=class_values[0])
+    service_choices = service_attended
+    for service in service_choices:
+        for descrip in service:
+            if descrip == class_values[1].strip():
+                class_num_check = class_num
+                break
+            else:
+                class_num = descrip
+    date_of_class = request.GET.get('date')
+    attendee_list = class_attendance.objects.filter(dateofclass=date_of_class, class_name=class_id.id, service=class_num_check).values_list('child')
+    count = attendee_list.count()
+    context = {'count': count}
+    return render(request, "groups/update_present_count.html", context)
+
 

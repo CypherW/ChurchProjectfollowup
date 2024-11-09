@@ -572,6 +572,169 @@ def display_event_feedback_modal(request):
     return render(request, "groups/display_event_feedback_modal.html", context)
 
 @login_required
+def display_attendance_feedback_required_modal(request):
+    def get_previous_sunday(weeks_ago=0):
+        today = timezone.localtime()
+        if today.strftime('%A') == 'Sunday':
+            previous_sunday = today.date()
+        else:
+            offset = (today.weekday() + 1) % 7
+            previous_sunday = today - timezone.timedelta(days=offset)
+        return previous_sunday - timezone.timedelta(weeks=weeks_ago)
+
+    def get_next_saturday(sunday_date):
+        next_saturday = sunday_date + timezone.timedelta(days=6)
+        return next_saturday
+    
+    today = timezone.localtime()
+
+
+    # Get the most recent Sunday and the following Saturday
+    sunday_date = get_previous_sunday()
+    saturday_date = get_next_saturday(sunday_date)
+    group_meetings = session_attended_options.objects.all()
+    group_meetings_count = group_meetings.count()
+    attendance_events = session_attendance.objects.filter(
+    Q(dateofvisit__gte=sunday_date) & Q(dateofvisit__lte=saturday_date)).distinct('session_attended')
+    attendance_events = list(attendance_events.values_list('session_attended', flat=True))
+    feedback_due = group_meetings.exclude(id__in=attendance_events)
+    formatted_sunday_date = datetime.strftime(sunday_date, "%d %B %Y")
+    formatted_saturday_date = datetime.strftime(saturday_date, "%d %B %Y")
+    week_statement = 'this week (' + str(formatted_sunday_date) + ' to ' + str(formatted_saturday_date) + ')'
+    context = { 
+        'sunday_date': sunday_date,
+        'saturday_date': saturday_date,
+        'feedback_due': feedback_due,
+        'week_statement': week_statement
+        
+          }
+    return render(request, "groups/display_attendance_feedback_required_modal.html", context)
+
+@login_required
+def display_attendance_feedback_last_week_required_modal(request):
+    def get_previous_sunday(weeks_ago=0):
+        today = timezone.localtime()
+        if today.strftime('%A') == 'Sunday':
+            previous_sunday = today.date()
+        else:
+            offset = (today.weekday() + 1) % 7
+            previous_sunday = today - timezone.timedelta(days=offset)
+        return previous_sunday - timezone.timedelta(weeks=weeks_ago)
+
+    def get_next_saturday(sunday_date):
+        next_saturday = sunday_date + timezone.timedelta(days=6)
+        return next_saturday
+    
+    today = timezone.localtime()
+
+
+    # Get the most recent Sunday and the following Saturday
+    most_recent_sunday = get_previous_sunday()
+    most_recent_saturday = get_next_saturday(most_recent_sunday)
+
+    # Get the Sunday and Saturday from one week ago
+    sunday_date = get_previous_sunday(weeks_ago=1)
+    saturday_date = get_next_saturday(sunday_date)
+
+    # Get the Sunday and Saturday from two weeks ago
+    two_weeks_ago_sunday = get_previous_sunday(weeks_ago=2)
+    two_weeks_ago_saturday = get_next_saturday(two_weeks_ago_sunday)
+
+    group_meetings = session_attended_options.objects.all()
+    group_meetings_count = group_meetings.count()
+    attendance_events = session_attendance.objects.filter(
+    Q(dateofvisit__gte=sunday_date) & Q(dateofvisit__lte=saturday_date)).distinct('session_attended')
+    attendance_events = list(attendance_events.values_list('session_attended', flat=True))
+    feedback_due = group_meetings.exclude(id__in=attendance_events)
+    formatted_sunday_date = datetime.strftime(sunday_date, "%d %B %Y")
+    formatted_saturday_date = datetime.strftime(saturday_date, "%d %B %Y")
+    week_statement = 'last week (' + str(formatted_sunday_date) + ' to ' + str(formatted_saturday_date) + ')'
+    
+    context = { 
+        'sunday_date': sunday_date,
+        'saturday_date': saturday_date,
+        'feedback_due': feedback_due,
+        'week_statement': week_statement,
+        
+          }
+    return render(request, "groups/display_attendance_feedback_required_modal.html", context)
+
+@login_required
+def display_attendance_feedback_two_weeks_ago_required_modal(request):
+    def get_previous_sunday(weeks_ago=0):
+        today = timezone.localtime()
+        if today.strftime('%A') == 'Sunday':
+            previous_sunday = today.date()
+        else:
+            offset = (today.weekday() + 1) % 7
+            previous_sunday = today - timezone.timedelta(days=offset)
+        return previous_sunday - timezone.timedelta(weeks=weeks_ago)
+
+    def get_next_saturday(sunday_date):
+        next_saturday = sunday_date + timezone.timedelta(days=6)
+        return next_saturday
+    
+    today = timezone.localtime()
+
+
+    # Get the most recent Sunday and the following Saturday
+    most_recent_sunday = get_previous_sunday()
+    most_recent_saturday = get_next_saturday(most_recent_sunday)
+
+    # Get the Sunday and Saturday from one week ago
+    sunday_date = get_previous_sunday(weeks_ago=1)
+    saturday_date = get_next_saturday(sunday_date)
+
+    # Get the Sunday and Saturday from two weeks ago
+    sunday_date = get_previous_sunday(weeks_ago=2)
+    saturday_date = get_next_saturday(sunday_date)
+
+    group_meetings = session_attended_options.objects.all()
+    group_meetings_count = group_meetings.count()
+    attendance_events = session_attendance.objects.filter(
+    Q(dateofvisit__gte=sunday_date) & Q(dateofvisit__lte=saturday_date)).distinct('session_attended')
+    attendance_events = list(attendance_events.values_list('session_attended', flat=True))
+    feedback_due = group_meetings.exclude(id__in=attendance_events)
+    formatted_sunday_date = datetime.strftime(sunday_date, "%d %B %Y")
+    formatted_saturday_date = datetime.strftime(saturday_date, "%d %B %Y")
+    week_statement = 'two weeks (' + str(formatted_sunday_date) + ' to ' + str(formatted_saturday_date) +')'
+    
+    context = { 
+        'sunday_date': sunday_date,
+        'saturday_date': saturday_date,
+        'feedback_due': feedback_due,
+        'week_statement': week_statement,
+        
+          }
+    return render(request, "groups/display_attendance_feedback_required_modal.html", context)
+
+
+@login_required
+def noFeedback_button_request_in_week(request):
+    session_id = request.GET.get('session_id')
+    week_statement = request.GET.get('week_statement')
+    meetingName = session_attended_options.objects.get(id=session_id)
+    leader = User.objects.get(pk=meetingName.group_leader_id)
+    requester = request.user.username
+    leaderEmail = leader.email
+    send_mail("FEEDBACK FOR MEETING",
+f"""Dear {leader}, 
+    
+A friendly reminder to update attendance and provide feedback for your prayer cell {week_statement}. Could you kindly take a moment to mark your attendance and share your thoughts?
+     
+Kind Regards,
+
+Pastor {requester}
+       
+         """,
+    "shodandevstesting@gmail.com",
+    [leaderEmail],
+    fail_silently=False,
+)
+
+    return render(request, "groups/noFeedback_button.html")
+
+@login_required
 def display_event_absent_modal(request):
     date = request.GET.get('eventDate')
     session = request.GET.get('session')

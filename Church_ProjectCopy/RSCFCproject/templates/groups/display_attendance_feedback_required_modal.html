@@ -1,0 +1,41 @@
+<div class="modal-dialog modal-dialog-centered" id="feedback_modal">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h6 class="modal-title text-white">Attendance Due: {{ sunday_date|date:"d F Y" }} to {{ saturday_date|date:"d F Y" }}</h6>
+      </div>
+      <div class="modal-body">
+        <ol>
+          {% for due_feedback in feedback_due %}
+          <li class="row">
+            <div class=" col-md-6 mt-2"><h6><b >{{ due_feedback }}:</b></h6></div>
+            <div class="col-md-6 mt-2 id=emailSent"><button class="btn btn-sm btn-warning" id="feedback_button{{due_feedback.id}}" 
+              hx-get="{% url 'noFeedback_button_request_in_week' %}" hx-trigger="click" hx-target="#feedback_button{{due_feedback.id}}" 
+              hx-swap="outerHTML"  hx-vals='{"session_id": "{{ due_feedback.id }}", "week_statement": "{{week_statement}}"}'>Request Feedback</button></div>
+            
+         
+          </li>
+        {% endfor %}
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <a button class="btn btn-primary bg-info  btn-sm" id="feedback_button"
+                    hx-get="{% url 'display_attendance_feedback_two_weeks_ago_required_modal' %}"
+                    hx-target="#feedback_modal"
+                    hx-trigger="click"
+                   >Two Weeks Ago</a>   
+        <a button class="btn btn-primary bg-info  btn-sm" id="feedback_button"
+                    hx-get="{% url 'display_attendance_feedback_last_week_required_modal' %}"
+                    hx-target="#feedback_modal"
+                    hx-trigger="click"
+                   >Last Week</a>
+        <a button class="btn btn-primary bg-info  btn-sm" id="feedback_button"
+                   hx-get="{% url 'display_attendance_feedback_required_modal' %}"
+                   hx-target="#feedback_modal"
+                   hx-trigger="click"
+                  >Current Week</a>
+         <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  
