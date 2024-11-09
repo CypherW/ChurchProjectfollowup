@@ -647,6 +647,7 @@ def display_attendance_feedback_last_week_required_modal(request):
     Q(dateofvisit__gte=sunday_date) & Q(dateofvisit__lte=saturday_date)).distinct('session_attended')
     attendance_events = list(attendance_events.values_list('session_attended', flat=True))
     feedback_due = group_meetings.exclude(id__in=attendance_events)
+    feedback_due = feedback_due.order_by('session_attended')
     formatted_sunday_date = datetime.strftime(sunday_date, "%d %B %Y")
     formatted_saturday_date = datetime.strftime(saturday_date, "%d %B %Y")
     week_statement = 'last week (' + str(formatted_sunday_date) + ' to ' + str(formatted_saturday_date) + ')'
@@ -696,6 +697,7 @@ def display_attendance_feedback_two_weeks_ago_required_modal(request):
     Q(dateofvisit__gte=sunday_date) & Q(dateofvisit__lte=saturday_date)).distinct('session_attended')
     attendance_events = list(attendance_events.values_list('session_attended', flat=True))
     feedback_due = group_meetings.exclude(id__in=attendance_events)
+    feedback_due = feedback_due.order_by('session_attended')
     formatted_sunday_date = datetime.strftime(sunday_date, "%d %B %Y")
     formatted_saturday_date = datetime.strftime(saturday_date, "%d %B %Y")
     week_statement = 'two weeks (' + str(formatted_sunday_date) + ' to ' + str(formatted_saturday_date) +')'
