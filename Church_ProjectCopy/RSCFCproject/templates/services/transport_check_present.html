@@ -1,0 +1,52 @@
+{% block content %}
+
+<script>
+  document.body.addEventListener('htmx:configRequest', (event) =>
+  {
+    event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+
+  });
+</script>
+
+
+<div class="app-table" id="id_table">
+    <!--Table-->
+    <br>
+  <div class="container d-flex justify-content-center">
+    <div></div><h4> Present on {{ session_date}}</h4></div>
+    <br>
+    </div>
+    <div class="container d-flex justify-content-center">
+    <table class="table table-light table-hover">
+        <thead style="position: sticky;top: 0" class="bg-info">
+          <tr class="text-white">
+            <th class="header1 bg-info" scope="col">Name</th>
+            <th class="header1 bg-info" scope="col">Phone Number</th>
+            <th id="id_present_attendance" class="header1 bg-info" scope="col"
+            hx-get="{% url 'update_passenger_count' %}"
+            hx-trigger="remove_passenger from:body"
+            hx-include="{{ id_dateoftrip }}"
+            hx-swap="outerHTML">Total: {{ count }}
+            <a button class="btn btn-danger bg-danger  btn-sm" data-bs-dismiss="modal">X</a></th>
+
+          </tr>
+        </thead>
+        <tbody>
+            {% for attendee in attendee_list %}
+            <tr>
+              <td><a href="{% url 'group_person_detail' attendee.passenger.id %}">{{ attendee.passenger.Name }} {{ attendee.passenger.Surname }} </a></td>
+              <td>{{ attendee.passenger.CellNumber }}</td>
+              <td>
+                <a class="form-check form-switch">
+                <input class="form-check-input switch" type="checkbox" hx-delete="{% url 'remove_passenger' attendee.pk %}" hx-trigger="change" 
+                hx-target="this" hx-swap="outerHTML" hx-on:remove_attendee="this.closest('tr').remove()" name="" id="{{ attendee.id }}" checked>
+                <label class="form-check-label" for="flexSwitchCheckDefault">Absent/Present</label>
+                {% endfor %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+        
+{% endblock %}

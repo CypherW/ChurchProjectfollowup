@@ -1,0 +1,43 @@
+<script>
+  document.body.addEventListener('htmx:configRequest', (event) =>
+  {
+    event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+
+  });
+</script>
+
+<div class="container d-flex justify-content-center">
+    <table class="table table-hover">
+        <thead  class="sticky-top bg-info">
+          <tr class="text-white">
+            <th class="" scope="col">Name</th>
+            <th class="text-nowrap" scope="col">Phone Number</th>
+            <th id="id_present_attendance" class="" scope="col"
+            hx-get="{% url 'update_passenger_count' %}"
+            hx-trigger="mark_passenger_present from:body"
+            hx-include="#id_dateoftrip"
+            hx-target="#id_present_attendance"
+            hx-swap="outerHTMLs">Total: {{ passenger_list_count }}</th>
+          </tr>
+        </thead>
+        <tbody>
+    {% for passenger in passenger_list %}
+    <tr id="row_{{ passenger.passenger_id }}">
+        <td><a href="{% url 'group_person_detail' passenger.passenger.id %}">{{ passenger.passenger.Name }} {{ passenger.passenger.Surname }}</a></td>
+        <td>{{ passenger.passenger.CellNumber }}</td>
+        <td>
+            <a class="form-check form-switch">
+                <input class="form-check-input switch" type="checkbox"
+                       hx-get="{% url 'mark_passenger_present' passenger.passenger.pk %}"
+                       hx-trigger="change" hx-target="#row_{{ passenger.passenger_id }}" hx-swap="outerHTML"
+                       hx-include="#id_dateoftrip"
+                       hx-on:mark_passenger_present="this.closest('tr').remove()"
+                       name="" id="{{ passenger.pk }}">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Mark Present</label>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+      </table>
+    </div>

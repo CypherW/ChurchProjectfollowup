@@ -2,13 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 import datetime
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import service_counts, childrensChurch_classes, childrensChurch_class_member, service_attended, class_attendance
+from .models import service_counts, childrensChurch_classes, childrensChurch_class_member, service_attended, class_attendance, transport_ministry, transport_passengers_list, trip_passengers
 from people.models import People, guardianRelation
 from groups.models import session_attendance
 from visitors.models import visit_details
 from SalvationFollowUps.models import salvations
 from django.contrib.auth.models import User
-from .forms import service_count_form, Person_Form, Parent_Form, childrensChurchAttendanceForm
+from .forms import service_count_form, Person_Form, Parent_Form, childrensChurchAttendanceForm, add_Passenger_Form, transport_AttendanceForm
 from django.utils import timezone
 from django.contrib import messages
 from datetime import timedelta
@@ -23,7 +23,7 @@ import json
 def service_countspage(request):
     date = timezone.now().date()
     try:
-        previous_submission = service_counts.objects.get(dateofmeeting=date)
+        previous_submission = service_counts.objects.get(service_date=date)
     except:
         previous_submission = False
     if request.method=='POST':
@@ -49,6 +49,37 @@ def service_countspage(request):
         'form': form,
     }
     return render(request, 'services/service_counts.html', context)
+
+@login_required
+def load_service_counts_by_date(request):
+    date = timezone.now().date()
+    try:
+        previous_submission = service_counts.objects.get(service_date=date)
+    except:
+        previous_submission = False
+    if request.method=='POST':
+        if previous_submission == False:
+            form = service_count_form(request.POST)
+        else:
+            form = service_count_form(request.POST, instance=previous_submission)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            counter = request.user.id
+            instance.counter = User.objects.get(id=counter)
+            instance.save()
+            messages.success(request, f'Count has been updated. 1st servce:{instance.first_service_count} 2nd Service:{instance.second_service_count}')
+            return redirect('service_counts')
+    else:
+        if previous_submission == False:
+            form = service_count_form()
+        else:
+            form = service_count_form(instance=previous_submission)
+    
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'services/load_service_counts_by_date.html', context)
 
 @login_required
 def stats(request):
@@ -573,3 +604,152 @@ def update_present_class_count(request):
     return render(request, "groups/update_present_count.html", context)
 
 
+@login_required
+def passenger_check_in(request):
+    form = transport_AttendanceForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'services/passenger_check_in.html', context)
+
+@login_required
+def add_passenger(request):
+    form = add_Passenger_Form(request.POST)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.createdBy = User.objects.get(pk=request.user.pk)
+        instance.save()
+        obj = People.objects.latest('id')
+        obj.createdby = User.objects.get(pk=request.user.pk)
+        obj.save()
+        newMember = People.objects.get(pk=obj.id)
+        transport_added_to = transport_ministry.objects.get(passenger_assistant=request.user.id)
+        passenger_membership_instance = transport_passengers_list(passenger=newMember)
+        passenger_membership_instance.bus_area = transport_added_to
+        passenger_membership_instance.active = True
+        passenger_membership_instance.save()
+        return redirect(add_passenger)
+    else:
+            form = add_Passenger_Form()
+            transport = transport_ministry.objects.get(passenger_assistant=request.user.id)
+            print(transport)
+    context = {
+            'form':form, 
+            'transport': transport,
+        }
+    return render(request, 'services/add_passenger.html', context)
+
+@login_required()
+def check_passenger_exists(request):
+    if request.method=='POST':
+        person_id = request.POST.get('person')
+        print(person_id)
+        newMember = People.objects.get(pk=person_id)
+        transport_added_to = transport_ministry.objects.get(passenger_assistant=request.user.id)
+        obj = transport_passengers_list.objects.create(passenger=newMember, bus_area=transport_added_to, active=True)
+        obj.save()
+
+        return redirect('check_passenger_exists')
+
+    name = request.GET.get('Name').strip()
+    exists = False
+    surname = request.GET.get('Surname').strip()
+    if len(name) > 1 and len(surname) > 1:
+       exists = People.objects.filter(Name=name, Surname=surname).exists()
+       if exists == True:
+        person = People.objects.get(Name=name, Surname=surname)
+    context = {
+          'exists': exists,
+          'person': person,
+       }
+    return render(request, 'services/check_passenger_exists_modal.html', context)
+
+def load_passenger_members_list(request):
+    date = request.GET.get('dateoftrip')
+    transport_area = transport_ministry.objects.get(passenger_assistant=request.user.id)
+    passenger_list = transport_passengers_list.objects.filter(bus_area=transport_area.id, active=True)
+    already_in_vehicle = trip_passengers.objects.filter(dateoftrip=date, area_from=transport_area.id).values_list('passenger')
+    passenger_list_count = already_in_vehicle.count()
+    already_in_vehicle = list(already_in_vehicle.values_list('passenger_id', flat=True))
+    passenger_list = passenger_list.exclude(passenger__in=already_in_vehicle)
+    passenger_list = passenger_list.order_by('passenger_id__Name') 
+    context = {
+        'passenger_list': passenger_list,
+        'passenger_list_count': passenger_list_count,
+    }
+    return render(request, 'services/load_passenger_member_list.html', context)
+
+@login_required
+def mark_passenger_present(request, pk):
+    transport_area = transport_ministry.objects.get(passenger_assistant=request.user.id)
+    date_of_visit = request.GET.get('dateoftrip')
+    session_id = transport_ministry.objects.get(pk=transport_area.id)
+    attendee = People.objects.get(id=pk)
+
+    trip_passengers.objects.create(
+                    passenger= attendee,
+                    dateoftrip=date_of_visit,
+                    area_from=session_id,
+                    created_by=request.user
+                )
+
+    response = HttpResponse('')
+    trigger_client_event(response, 'mark_passenger_present')
+    return response
+
+@login_required
+def update_passenger_count(request):
+    date = request.GET.get('dateoftrip')
+    transport_area = transport_ministry.objects.get(passenger_assistant=request.user.id)
+    already_in_vehicle = trip_passengers.objects.filter(dateoftrip=date, area_from=transport_area.id).values_list('passenger')
+    passenger_list_count = already_in_vehicle.count()
+    
+    context = { 'passenger_list_count': passenger_list_count}
+    return render(request, "services/update_passenger_count.html", context)
+
+@login_required
+def load_searchByTyping_add_present_passenger(request):
+    date = request.GET.get('dateoftrip')
+    transport_area = transport_ministry.objects.get(passenger_assistant=request.user.id)
+    passenger_list = transport_passengers_list.objects.filter(bus_area=transport_area.id, active=True)
+    already_in_vehicle = trip_passengers.objects.filter(dateoftrip=date, area_from=transport_area.id).values_list('passenger')
+    passenger_list_count = already_in_vehicle.count()
+    already_in_vehicle = list(already_in_vehicle.values_list('passenger_id', flat=True))
+    passenger_list = passenger_list.exclude(passenger__in=already_in_vehicle)
+    passenger_list = passenger_list.order_by('passenger_id__Name') 
+    search_term = request.GET.get('search')
+    passenger_list = passenger_list.filter(
+            passenger__Name__istartswith=search_term) | passenger_list.filter(
+            passenger__Surname__istartswith=search_term)
+    context = {
+        'passenger_list': passenger_list,
+        'passenger_list_count': passenger_list_count,
+    }
+    return render(request, 'services/load_passenger_member_list.html', context)
+
+login_required
+def transport_check_present(request):
+    date = request.GET.get('dateoftrip')
+    transport_area = transport_ministry.objects.get(passenger_assistant=request.user.id)
+    already_in_vehicle = trip_passengers.objects.filter(dateoftrip=date, area_from=transport_area.id)
+    already_in_vehicle = already_in_vehicle.order_by('passenger_id__Name')
+    passenger_list_count = already_in_vehicle.count()
+    
+    context = {
+        'count': passenger_list_count,
+        'attendee_list': already_in_vehicle,
+        'class_attending': transport_area,
+        'date':  date,
+    }
+
+    return render(request, 'services/transport_check_present.html', context)
+
+@login_required
+@require_http_methods('DELETE')
+def remove_passenger(request, pk):
+    attendee = get_object_or_404(trip_passengers, pk=pk)
+    attendee.delete()
+    response = HttpResponse(status=204)
+    response['HX-Trigger'] = json.dumps({"remove_attendee": "remove_attendee"})
+    response = trigger_client_event(response, 'remove_attendee')
+    return response

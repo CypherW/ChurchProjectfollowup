@@ -1,0 +1,60 @@
+
+{% if exists == True %}
+
+<div class="modal modal-blur fade show" style="display: block" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true">
+  <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title text-white">This person exists</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><b>It appears this person is already in the database:</b></p>
+        <ul>
+          <li><b>Name:</b> {{ person.Name }}</li>
+          <li><b>Surname:</b> {{ person.Surname }}</li>
+          <li><b>Gender:</b> {{ person.Gender }}</li>
+          <li><b>Cell Number:</b> {{ person.CellNumber }}</li>
+          <li><b>Email Address:</b> {{ person.EmailAddress }}</li>
+          <li><b>Date of birth:</b> {{ person.birthday|date:"d-F-Y" }}</li>
+          <li><b>Area:</b> {{ person.area }}</li>
+        </ul>
+        <p>If it is not the same person please click cancel and change their name?</p>
+        <p>If it is the same person please click Add Passenger to add them as a passenger?</p>
+        <form hx-post="{% url 'check_passenger_exists' %}" hx-target="#exampleModal .modal-body" hx-swap="innerHTML" class="modal-content" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="person" value="{{ person.id }}">
+            
+      <div class="modal-footer d-flex">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+        <input class="btn btn-info" type="submit" value="Add Passenger">
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+</div>
+
+
+<script>
+
+  // Show the modal
+var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+myModal.show();
+
+// Hide the modal
+myModal.hide();
+
+document.getElementById('exampleModal').addEventListener('submit', function(event) {
+  myModal.hide();
+    // Perform your AJAX request here
+    // On success:
+    window.location.href = 'add_passenger';
+});
+
+</script>
+
+
+{% else %}
+  
+{% endif %}
+

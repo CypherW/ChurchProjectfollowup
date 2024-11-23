@@ -65,3 +65,43 @@ class class_service_feedback(models.Model):
     
     def __str__(self):
         return f'{self.teachers}, {self.class_name}, {self.word_taught}, {self.general_feedback}, {self.requires_attention}, {self.creation_date}, {self.created_by}'
+    
+class transport_ministry(models.Model):
+    passenger_assistant = models.ForeignKey(User, models.CASCADE, null=False)
+    area = models.CharField(max_length=20, null=False)
+
+    def __str__(self):
+        return f'{self.passenger_assistant}, {self.area}'
+    
+class transport_passengers_list(models.Model):
+    passenger = models.ForeignKey(People, models.CASCADE, null=False)
+    bus_area = models.ForeignKey(transport_ministry, models.CASCADE, null=False)
+    active = models.BooleanField(null=False, blank=False)
+
+    def __str__(self):
+        return f'{self.passenger}, {self.bus_area}, {self.active}'
+    
+class trip_passengers(models.Model):
+    passenger = models.ForeignKey(People, models.CASCADE, null=False)
+    area_from = models.ForeignKey(transport_ministry, models.CASCADE, null=False)
+    dateoftrip =  models.DateField(default=timezone.now, verbose_name = 'Date:')
+    creation_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, models.CASCADE, null=False)
+
+    def __str__(self):
+        return f'{self.passenger}, {self.area_from}, {self.dateoftrip}, {self.creation_date}, {self.created_by}'
+    
+class trip_passengers_absent(models.Model):
+    absentee = models.ForeignKey(People, models.CASCADE, null=True)
+    dateoftrip = models.DateField(default=timezone.now, verbose_name = 'Date:')
+    transport_opp_missed = models.ForeignKey(transport_ministry, models.CASCADE, null=False, blank=False)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    follow_up_date = models.DateField(default=timezone.now, verbose_name = 'Date:')
+    follow_up_Feedback = models.TextField(verbose_name='Feedback:', null=True, blank=True)
+
+
+    def __str__(self):
+        return f'{self.transport_opp_missed}, {self.absentee}, {self.dateoftrip}, {self.follow_up_Feedback}'
+    
+
+

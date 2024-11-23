@@ -1,0 +1,6 @@
+<th id="id_present_attendance" class="header12" scope="col"
+            hx-get="{% url 'update_passenger_count' %}"
+            hx-trigger="mark_passenger_present from:body"
+            hx-include="#id_dateoftrip"
+            hx-target="#id_present_attendance"
+            hx-swap="outerHTML">Total: {{ passenger_list_count }}</th>
